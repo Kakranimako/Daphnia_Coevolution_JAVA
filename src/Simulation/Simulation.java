@@ -1,6 +1,7 @@
 package Simulation;
 
 import Organism.Daphnia;
+import Organism.Organism;
 import Organism.OrganismFactory;
 import Organism.Symbiont;
 
@@ -46,8 +47,13 @@ public class Simulation {
     }
     public void reprod() {
         this.daphniapop = reprodDaph(this.daphniapop, this.variables);
-        this.symbiontpop = reprodSymb(this.symbiontpop, this.variables);
+        this.gut_Symbionts = reprodSymb(this.gut_Symbionts, this.variables);
+        this.env_Symbionts = reprodSymb(this.env_Symbionts, this.variables);
         HashSet<String> whitelist = createWhitelist(this.daphniapop);
+        Coupled resultsCoupling = createCoupling(this.daphniapop,this.gut_Symbionts,whitelist);
+
+
+
 
 
     }
@@ -68,7 +74,7 @@ public class Simulation {
 
     }
 
-    public ArrayList<Integer> makeCumulFitlist(HashMap<String, > org){
+    public ArrayList<Integer> makeCumulFitlist(HashMap<String, Daphnia> org){
         return null;
 
     }
@@ -102,7 +108,7 @@ public class Simulation {
 
     public  HashSet<String> createWhitelist (HashMap<String, Daphnia> Dpop) {
 
-        HashSet<String> whitelist = new HashSet<>(String)
+        HashSet<String> whitelist = new HashSet<String>();
 
         for (Daphnia daphnia: Dpop.values()) {
             whitelist.add(daphnia.getOuder());
@@ -112,9 +118,74 @@ public class Simulation {
         return whitelist;
     }
 
-    public Object[] coupleDicts createCoupling (HashMap<String, Daphnia> Dpop, HashMap<String, Symbiont> gutSymbs, HashSet whitelist) {
+    public Coupled createCoupling (HashMap<String, Daphnia> Dpop, HashMap<String, Symbiont> gutSymbs, HashSet<String> whitelist) {
 
+
+
+
+        HashMap<String, Daphnia> coupledDaphs = new HashMap<String, Daphnia>();
+        HashMap<String, Daphnia> nonCoupledDaphs = new HashMap<String, Daphnia>();
+
+        HashMap<String, Symbiont> coupledSymbs = new HashMap<String, Symbiont>();
+        HashMap<String, Symbiont> nonCoupledSymbs = new HashMap<String, Symbiont>();
+
+
+        HashMap<String, ArrayList<Daphnia>> parentChildMap = new HashMap<String, ArrayList<Daphnia>>();
+        HashMap<String, ArrayList<Symbiont>> hostSymbMap = new HashMap<String, ArrayList<Symbiont>>();
+
+        for (String item : whitelist) {
+            parentChildMap.put(item + "key", new ArrayList<Daphnia>());
+        }
+
+        for (String item : whitelist) {
+            hostSymbMap.put(item + "key", new ArrayList<Symbiont>());
+        }
+
+        for (Daphnia ind : Dpop.values()){
+            parentChildMap.get(ind.getOuder() + "key").add(ind);
+        }
+        for (Symbiont ind : gutSymbs.values()) {
+            hostSymbMap.get(ind.getpartner() + "key").add(ind);
+        }
+
+        for (String item : parentChildMap.keySet()) {
+
+            ArrayList<Daphnia> toBeCoupledDaph = parentChildMap.get(item);
+            ArrayList<Symbiont> toBeCoupledSymb = hostSymbMap.get(item);
+
+            Collections.shuffle(toBeCoupledDaph);
+            Collections.shuffle(toBeCoupledSymb);
+
+            while (toBeCoupledDaph.size() != 0 && toBeCoupledSymb.size() != 0) {
+                Daphnia daph = toBeCoupledDaph.get(0);
+                Symbiont symb = toBeCoupledSymb.get(0);
+
+                daph.setpartner(symb.getName());
+                symb.setpartner(daph.getName());
+
+                coupledDaphs.put(daph.getName(), daph);
+                coupledSymbs.put(symb.getName(), symb);
+
+                toBeCoupledDaph.remove(0);
+                toBeCoupledSymb.remove(0);
+
+            }
+
+            for (Daphnia ind : toBeCoupledDaph) {
+                nonCoupledDaphs.put(ind.getName(), ind);
+            }
+
+            for (Symbiont ind : toBeCoupledSymb) {
+                nonCoupledSymbs.put(ind.getName(), ind);
+            }
+
+        }
+
+        Coupled resultsCoupling = new Coupled(coupledDaphs, coupledSymbs, nonCoupledDaphs, nonCoupledSymbs);
+
+        return resultsCoupling;
 
     };
+
 }
 
