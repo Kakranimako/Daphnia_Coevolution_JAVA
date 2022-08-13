@@ -35,12 +35,12 @@ public class OrganismFactory {
         return org_pop;
     }
 
-    public static HashMap<String, Symbiont> CreateNewIndvsSymbiont(String orgname, HashMap<String, Symbiont> Symbiontpop, Variables varis, int size, ArrayList<String> parentList){
+    public static HashMap<String, Symbiont> CreateNewIndvsSymbiont(String orgname, HashMap<String, Symbiont> Symbiontpop, Variables varis, int start, int size, ArrayList<String> parentList){
 
         HashMap<String, Symbiont> org_pop = new HashMap<>();
 
         // probleem if (Symbiontpop.equals())
-        for (int i = 1; i <= size; i++) {
+        while (start <= size) {
             String name = orgname + " " + i;
 
             Symbiont parent = Symbiontpop.get(parentList.get(i));

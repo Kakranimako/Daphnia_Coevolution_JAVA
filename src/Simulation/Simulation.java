@@ -10,72 +10,107 @@ import java.util.*;
 
 public class Simulation {
 
-    private HashMap<String, Daphnia> daphniapop;
-    private HashMap<String, Symbiont> symbiontpop;
-    private HashMap<String, Symbiont> gut_Symbionts;
-    private HashMap<String, Symbiont> env_Symbionts;
-    private Variables variables;
+    
 
-    public Simulation(Variables variables){
-        this.variables = variables;
-        this.symbiontpop = OrganismFactory.CreateSymbiont("Symbiont", this.variables.getMax_pop_num_Symb());
-        this.daphniapop = OrganismFactory.CreateDaphnias("Daphnia", this.variables.getMax_pop_num_Symb());
-        this.env_Symbionts.putAll(this.symbiontpop);
+    public Simulation(Populations allPops, Variables variables){
+        variables = variables;
+        
+        HashMap<String, Symbiont> symbiontPop = OrganismFactory.CreateSymbiont("Symbiont", variables.getMax_pop_num_Symb());
+        allPops.setSymbiontPop(symbiontPop);
+        
+        HashMap<String, Daphnia> daphniaPop = OrganismFactory.CreateDaphnias("Daphnia", variables.getMax_pop_num_Symb());
+        allPops.setDaphniaPop(daphniaPop);
 
-        Stack<Symbiont> symbiontlist = (Stack<Symbiont>) this.symbiontpop.values();
-        for (Daphnia daphnia: this.daphniapop.values()) {
+        allPops.setEnvSymbionts(symbiontPop);
+
+        Stack<Symbiont> symbiontlist = (Stack<Symbiont>) allPops.getSymbiontPop().values();
+        for (Daphnia daphnia: allPops.getDaphniaPop().values()) {
             Symbiont symbiont = symbiontlist.pop();
             daphnia.setpartner(symbiont.getName());
             symbiont.setpartner(daphnia.getName());
-            this.gut_Symbionts.put(symbiont.getName(), symbiont);
-            this.env_Symbionts.remove(symbiont.getName());
+            allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
+            allPops.getEnvSymbionts().remove(symbiont.getName());
 
         }
 
     }
 
-    public HashMap<String, Daphnia> reprodDaph(HashMap<String, Daphnia> daphniapop, Variables varis) {
+    public HashMap<String, Daphnia> reprodDaph(Populations allPops, Variables varis) {
 
-        ArrayList<Integer> cumulFitList = makeCumulFitlist(daphniapop);
+        ArrayList<Double> cumulFitList = makeCumulFitlist(allPops, "Daph");
         ArrayList<Integer> daphParentIndList = chooseParent(cumulFitList);
         ArrayList<String> daphParentList = findParent(daphParentIndList);
 
-        HashMap<String, Daphnia> newDaphpop = OrganismFactory.CreateNewIndvsDaphnia("Daphnia", daphniapop, varis, varis.getMax_pop_num_Daph(), daphParentList);
-        // dont forget white list probleem
+        // don't forget white list probleem
 
-        return newDaphpop;
+        return OrganismFactory.CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.getMax_pop_num_Daph(), daphParentList);
     }
-    public void reprod() {
-        this.daphniapop = reprodDaph(this.daphniapop, this.variables);
-        this.gut_Symbionts = reprodSymb(this.gut_Symbionts, this.variables);
-        this.env_Symbionts = reprodSymb(this.env_Symbionts, this.variables);
-        HashSet<String> whitelist = createWhitelist(this.daphniapop);
-        Coupled resultsCoupling = createCoupling(this.daphniapop,this.gut_Symbionts,whitelist);
+    public Populations reprod(Populations allPops, Variables varis) {
 
+        HashMap<String, Daphnia> Dpop = reprodDaph(allPops, varis);
+        allPops.setDaphniaPop(Dpop);
+
+        HashMap<String, Symbiont> Gpop = reprodSymb(allPops, varis, "Gut");
+        allPops.setGutSymbionts(Gpop);
+
+        HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
+        allPops.setGutSymbionts(Epop);
+
+
+        HashSet<String> whitelist = createWhitelist(allPops.getDaphniaPop());
+        Coupled resultsCoupling = createCoupling(allPops.getDaphniaPop(),allPops.getGutSymbionts(),whitelist);
+
+        return allPops;
 
 
 
 
     }
 
-    public HashMap<String, Symbiont> reprodSymb(HashMap<String, Symbiont> symbpop, Variables varis){
+    public HashMap<String, Symbiont> reprodSymb(Populations allPops, Variables varis, String whichPop){
+
+        HashMap<String, Symbiont> symbPop = allPops.getEnvSymbionts();
+        int start = varis.getMax_pop_num_Daph() + 1;
+        int stop = varis.getMax_pop_num_Symb();
+
+        if (whichPop.equals("Gut")) {
+            symbPop = allPops.getGutSymbionts();
+            start = 1;
+            stop = varis.getMax_pop_num_Daph();
+        }
 
 
-
-        // probleem
-        ArrayList<Integer> cumulFitList = makeCumulFitlist(symbpop);
+        ArrayList<Double> cumulFitList = makeCumulFitlist(allPops,"Symb");
         ArrayList<Integer> symbParentIndList = chooseParent(cumulFitList);
         ArrayList<String> symbParentList = findParent(symbParentIndList);
 
-        HashMap<String, Symbiont> newSymbpop = OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbpop, varis, varis.getMax_pop_num_Daph(), symbParentList);
+        HashMap<String, Symbiont> newSymbpop = OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, symbParentList);
 
         return newSymbpop;
 
 
     }
 
-    public ArrayList<Integer> makeCumulFitlist(HashMap<String, Daphnia> org){
-        return null;
+    public ArrayList<Double> makeCumulFitlist(Populations allPops, String orgtype){
+
+        ArrayList<Organism> testpoplist = new ArrayList<>(allPops.getSymbiontPop().values());
+
+        if (orgtype.equals("Daph")) {
+            testpoplist = new ArrayList<>(allPops.getDaphniaPop().values());
+         }
+
+        double sumfit = 0;
+        ArrayList<Double> cumulFitList = new ArrayList<>();
+        cumulFitList.add(sumfit);
+
+        for(Organism org : testpoplist) {
+            sumfit = sumfit + org.getFitness();
+            cumulFitList.add(sumfit);
+
+
+        }
+
+        return cumulFitList;
 
     }
     public ArrayList<Integer> chooseParent(ArrayList<Integer> cumulFitlist){
@@ -113,7 +148,6 @@ public class Simulation {
         for (Daphnia daphnia: Dpop.values()) {
             whitelist.add(daphnia.getOuder());
         }
-
 
         return whitelist;
     }
@@ -186,6 +220,47 @@ public class Simulation {
         return resultsCoupling;
 
     };
+
+    public Populations assignNonCoupled(Coupled resultCoupling, Populations allPops) {
+
+        HashMap<String, Symbiont> newEnvSymbs = new HashMap<String, Symbiont>();
+        newEnvSymbs.putAll(allPops.getEnvSymbionts());
+        newEnvSymbs.putAll(resultCoupling.getNonCoupledSymbs());
+        ArrayList<Symbiont> newEnvSymbsList = new ArrayList<>(newEnvSymbs.values());
+
+        HashMap<String, Daphnia> newCoupledDaph = new HashMap<String, Daphnia>();
+        HashMap<String, Symbiont> newCoupledSymbs = new HashMap<String, Symbiont>();
+
+        for (Daphnia daph : resultCoupling.getNonCoupledDaphs().values()) {
+
+            int symbInd = new Random().nextInt(newEnvSymbs.size());
+            Symbiont symb = newEnvSymbsList.get(symbInd);
+            daph.setpartner(symb.getName());
+            symb.setpartner(daph.getName());
+
+            newEnvSymbs.remove(symb.getName());
+            newEnvSymbsList.remove(symb);
+
+            newCoupledSymbs.put(symb.getName(), symb);
+            newCoupledDaph.put(daph.getName(), daph);
+
+        }
+
+        allPops.setEnvSymbionts(newEnvSymbs);
+            for(Symbiont symb : allPops.getEnvSymbionts().values()) {
+                symb.setpartner("Geen");
+            }
+
+        allPops.setDaphniaPop(newCoupledDaph);
+        allPops.getDaphniaPop().putAll(resultCoupling.getCoupledDaphs());
+
+        allPops.setGutSymbionts(resultCoupling.getCoupledSymbs());
+        allPops.getGutSymbionts().putAll(newCoupledSymbs);
+
+        return allPops;
+
+    }
+
 
 }
 
