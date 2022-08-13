@@ -41,9 +41,9 @@ public class OrganismFactory {
 
         // probleem if (Symbiontpop.equals())
         while (start <= size) {
-            String name = orgname + " " + i;
+            String name = orgname + " " + start;
 
-            Symbiont parent = Symbiontpop.get(parentList.get(i));
+            Symbiont parent = Symbiontpop.get(parentList.get(start));
             double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance());
             double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance());
             double fitness = 1;
@@ -52,6 +52,7 @@ public class OrganismFactory {
 
             Symbiont symbiont = new Symbiont(name, gene1, gene2, fitness, ouder, host);
             org_pop.put(symbiont.getName(), symbiont);
+            start = start + 1;
         }
         return org_pop;
     }

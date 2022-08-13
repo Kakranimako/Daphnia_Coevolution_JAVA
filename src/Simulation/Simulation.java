@@ -12,8 +12,8 @@ public class Simulation {
 
     
 
-    public Simulation(Populations allPops, Variables variables){
-        variables = variables;
+    public Simulation (Populations allPops, Variables variables){
+
         
         HashMap<String, Symbiont> symbiontPop = OrganismFactory.CreateSymbiont("Symbiont", variables.getMax_pop_num_Symb());
         allPops.setSymbiontPop(symbiontPop);
@@ -21,17 +21,21 @@ public class Simulation {
         HashMap<String, Daphnia> daphniaPop = OrganismFactory.CreateDaphnias("Daphnia", variables.getMax_pop_num_Symb());
         allPops.setDaphniaPop(daphniaPop);
 
-        allPops.setEnvSymbionts(symbiontPop);
+        allPops.getEnvSymbionts().putAll(symbiontPop);
 
-        Stack<Symbiont> symbiontlist = (Stack<Symbiont>) allPops.getSymbiontPop().values();
+        ArrayList<Symbiont> symbiontlist = new ArrayList<>(allPops.getSymbiontPop().values());
         for (Daphnia daphnia: allPops.getDaphniaPop().values()) {
-            Symbiont symbiont = symbiontlist.pop();
+            Symbiont symbiont = symbiontlist.get(0);
             daphnia.setpartner(symbiont.getName());
             symbiont.setpartner(daphnia.getName());
             allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
             allPops.getEnvSymbionts().remove(symbiont.getName());
 
         }
+
+        allPops = reprod(allPops, variables);
+
+
 
     }
 
@@ -113,7 +117,7 @@ public class Simulation {
         return cumulFitList;
 
     }
-    public ArrayList<Integer> chooseParent(ArrayList<Integer> cumulFitlist){
+    public ArrayList<Integer> chooseParent(ArrayList<Double> cumulFitlist){
         return null;
     }
 

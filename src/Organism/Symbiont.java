@@ -13,11 +13,5 @@ public class Symbiont extends Organism{
 
     }
 
-    public String getpartner() {
-        return partner;
-    }
 
-    public void setpartner(String partner) {
-        this.partner = partner;
-    }
 }

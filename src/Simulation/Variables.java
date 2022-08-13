@@ -1,7 +1,7 @@
 package Simulation;
 public class Variables {
 
-    private int scarcity;
+    private double scarcity;
     private int num_of_gen;
     private int max_pop_num_Daph;
     private int max_pop_num_Symb;
@@ -9,7 +9,7 @@ public class Variables {
     private double vir_parD;
     private double vir_parS;
 
-    public Variables(int scarcity, int num_of_gen, int max_pop_num_Daph, int max_pop_num_Symb, int mutation_chance, int vir_parD, int vir_parS) {
+    public Variables(double scarcity, int num_of_gen, int max_pop_num_Daph, int max_pop_num_Symb, double mutation_chance, double vir_parD, double vir_parS) {
         this.scarcity = scarcity;
         this.num_of_gen = num_of_gen;
         this.max_pop_num_Daph = max_pop_num_Daph;
@@ -19,11 +19,11 @@ public class Variables {
         this.vir_parS = vir_parS;
     }
 
-    public int getScarcity() {
+    public double getScarcity() {
         return scarcity;
     }
 
-    public void setScarcity(int scarcity) {
+    public void setScarcity(double scarcity) {
         this.scarcity = scarcity;
     }
 
@@ -77,7 +77,7 @@ public class Variables {
 
     @Override
     public String toString() {
-        return "Simulation.Variables{" +
+        return "Variables{" +
                 "scarcity=" + scarcity +
                 ", num_of_gen=" + num_of_gen +
                 ", max_pop_num_Daph=" + max_pop_num_Daph +

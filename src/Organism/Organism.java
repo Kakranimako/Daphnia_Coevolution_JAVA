@@ -33,7 +33,6 @@ public class Organism {
     @Override
     public String toString() {
         return "Organism{" +
-                "partner='" + partner + '\'' +
                 ", name='" + name + '\'' +
                 ", gene1=" + gene1 +
                 ", gene2=" + gene2 +
