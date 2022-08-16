@@ -5,7 +5,13 @@ import Simulation.Populations;
 import Simulation.Simulation;
 import Simulation.Variables;
 
+
 import java.util.HashMap;
+
+
+
+
+
 
 public class Main {
 
@@ -21,12 +27,18 @@ public class Main {
 
         Populations dummyPops = new Populations(daphniaPop,symbiontPop,gutSymbionts,envSymbionts);
 
-        Variables dummyVars = new Variables(0.3, 100, 10, 20, 0.01, 0.2, 0.2);
+        Variables dummyVars = new Variables(0.3, 1000, 1000, 2000, 0.01, 0.2, 0.2);
+        int i = 0;
+        while (i < dummyVars.getNum_of_gen()) {
+            Simulation simulator = new Simulation(dummyPops, dummyVars);
 
-        Simulation simulator = new Simulation(dummyPops, dummyVars);
+            i+=1;
+        }
+
 
     }
 
 
 
 }
+

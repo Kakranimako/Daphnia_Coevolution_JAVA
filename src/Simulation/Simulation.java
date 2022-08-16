@@ -18,7 +18,7 @@ public class Simulation {
         HashMap<String, Symbiont> symbiontPop = OrganismFactory.CreateSymbiont("Symbiont", variables.getMax_pop_num_Symb());
         allPops.setSymbiontPop(symbiontPop);
         
-        HashMap<String, Daphnia> daphniaPop = OrganismFactory.CreateDaphnias("Daphnia", variables.getMax_pop_num_Symb());
+        HashMap<String, Daphnia> daphniaPop = OrganismFactory.CreateDaphnias("Daphnia", variables.getMax_pop_num_Daph());
         allPops.setDaphniaPop(daphniaPop);
 
         allPops.getEnvSymbionts().putAll(symbiontPop);
@@ -30,6 +30,7 @@ public class Simulation {
             symbiont.setpartner(daphnia.getName());
             allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
             allPops.getEnvSymbionts().remove(symbiont.getName());
+            symbiontlist.remove(0);
 
         }
 
@@ -41,13 +42,13 @@ public class Simulation {
 
     public HashMap<String, Daphnia> reprodDaph(Populations allPops, Variables varis) {
 
-        ArrayList<Double> cumulFitList = makeCumulFitlist(allPops, "Daph");
-        ArrayList<Integer> daphParentIndList = chooseParent(cumulFitList);
-        ArrayList<String> daphParentList = findParent(daphParentIndList);
+        Parentpicker picksLists = makeCumulFitlist(allPops, "Daph", "none");
+        picksLists = chooseParent(picksLists);
+        
 
         // don't forget white list probleem
 
-        return OrganismFactory.CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.getMax_pop_num_Daph(), daphParentList);
+        return OrganismFactory.CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.getMax_pop_num_Daph(), picksLists.getParentList());
     }
     public Populations reprod(Populations allPops, Variables varis) {
 
@@ -58,11 +59,13 @@ public class Simulation {
         allPops.setGutSymbionts(Gpop);
 
         HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
-        allPops.setGutSymbionts(Epop);
+        allPops.setEnvSymbionts(Epop);
 
 
         HashSet<String> whitelist = createWhitelist(allPops.getDaphniaPop());
         Coupled resultsCoupling = createCoupling(allPops.getDaphniaPop(),allPops.getGutSymbionts(),whitelist);
+
+        allPops = assignNonCoupled(resultsCoupling, allPops);
 
         return allPops;
 
@@ -82,49 +85,99 @@ public class Simulation {
             start = 1;
             stop = varis.getMax_pop_num_Daph();
         }
+        
+        
+        
+        Parentpicker picksList  = makeCumulFitlist(allPops,"Symb", whichPop);
+        picksList = chooseParent(picksList);
+        
 
-
-        ArrayList<Double> cumulFitList = makeCumulFitlist(allPops,"Symb");
-        ArrayList<Integer> symbParentIndList = chooseParent(cumulFitList);
-        ArrayList<String> symbParentList = findParent(symbParentIndList);
-
-        HashMap<String, Symbiont> newSymbpop = OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, symbParentList);
+        HashMap<String, Symbiont> newSymbpop = OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
 
         return newSymbpop;
 
 
     }
 
-    public ArrayList<Double> makeCumulFitlist(Populations allPops, String orgtype){
+    public Parentpicker makeCumulFitlist(Populations allPops, String orgtype, String gut_or_env){
 
-        ArrayList<Organism> testpoplist = new ArrayList<>(allPops.getSymbiontPop().values());
+
+        ArrayList<Organism> testpoplist = new ArrayList<>(allPops.getGutSymbionts().values());
+
 
         if (orgtype.equals("Daph")) {
             testpoplist = new ArrayList<>(allPops.getDaphniaPop().values());
          }
 
+        if (gut_or_env.equals("Env")) {
+            testpoplist = new ArrayList<>(allPops.getEnvSymbionts().values());
+        }
+
         double sumfit = 0;
         ArrayList<Double> cumulFitList = new ArrayList<>();
-        cumulFitList.add(sumfit);
+
+
+        ArrayList<String> parentCumulList = new ArrayList<>();
 
         for(Organism org : testpoplist) {
             sumfit = sumfit + org.getFitness();
             cumulFitList.add(sumfit);
-
-
+            parentCumulList.add(org.getName());
         }
 
-        return cumulFitList;
+        Parentpicker picksList = new Parentpicker(cumulFitList, parentCumulList, new ArrayList<>());
+
+        return picksList;
 
     }
-    public ArrayList<Integer> chooseParent(ArrayList<Double> cumulFitlist){
-        return null;
+    public Parentpicker chooseParent(Parentpicker picksList){
+
+        ArrayList<String> parentList = new ArrayList<>();
+
+
+        int sizelist = picksList.getCumulFitList().size();
+
+        int i = 1;
+        while ( i <= sizelist) {
+
+            double target = new Random().nextDouble(0, picksList.getCumulFitList().get(sizelist-1));
+            target = 1.3;
+            int linkergrens = 0;
+            int rechtergrens = picksList.getCumulFitList().size()-1;
+            int targIndex = (linkergrens + rechtergrens)/2;
+            int oldtargIndex = 0;
+
+            while(targIndex != 0 && !(picksList.getCumulFitList().get(targIndex) >= target && picksList.getCumulFitList().get(targIndex-1) < target)) {
+
+
+                if (picksList.getCumulFitList().get(targIndex) > target) {
+                    rechtergrens = targIndex;
+                }
+                else linkergrens = targIndex;
+
+                targIndex = (linkergrens + rechtergrens)/2;
+
+                if (oldtargIndex == linkergrens) {
+                    targIndex += 1;
+                }
+                oldtargIndex = targIndex;
+
+
+
+
+
+            }
+            
+            parentList.add(picksList.getParentCumulList().get(targIndex));
+            i = i+1;
+
+        }
+        
+        picksList.setParentList(parentList);
+        return picksList;
     }
 
-    public ArrayList<String> findParent(ArrayList<Integer> parentIndList) {
-        return null;
-
-    }
+    
 
     public static double newGene(double parentGene, double mutChance) {
 
@@ -183,7 +236,10 @@ public class Simulation {
             parentChildMap.get(ind.getOuder() + "key").add(ind);
         }
         for (Symbiont ind : gutSymbs.values()) {
-            hostSymbMap.get(ind.getpartner() + "key").add(ind);
+            if (whitelist.contains(ind.getpartner())) {
+                hostSymbMap.get(ind.getpartner() + "key").add(ind);
+            }
+            else nonCoupledSymbs.put(ind.getName(), ind);
         }
 
         for (String item : parentChildMap.keySet()) {
@@ -251,9 +307,9 @@ public class Simulation {
         }
 
         allPops.setEnvSymbionts(newEnvSymbs);
-            for(Symbiont symb : allPops.getEnvSymbionts().values()) {
-                symb.setpartner("Geen");
-            }
+        for(Symbiont symb : allPops.getEnvSymbionts().values()) {
+            symb.setpartner("Geen");
+        }
 
         allPops.setDaphniaPop(newCoupledDaph);
         allPops.getDaphniaPop().putAll(resultCoupling.getCoupledDaphs());

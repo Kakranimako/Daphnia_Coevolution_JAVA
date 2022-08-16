@@ -43,7 +43,7 @@ public class OrganismFactory {
         while (start <= size) {
             String name = orgname + " " + start;
 
-            Symbiont parent = Symbiontpop.get(parentList.get(start));
+            Symbiont parent = Symbiontpop.get(parentList.get(0));
             double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance());
             double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance());
             double fitness = 1;
@@ -53,6 +53,7 @@ public class OrganismFactory {
             Symbiont symbiont = new Symbiont(name, gene1, gene2, fitness, ouder, host);
             org_pop.put(symbiont.getName(), symbiont);
             start = start + 1;
+            parentList.remove(0);
         }
         return org_pop;
     }
@@ -60,9 +61,10 @@ public class OrganismFactory {
     public static HashMap<String, Daphnia> CreateNewIndvsDaphnia(String orgname, HashMap<String, Daphnia> Daphniapop, Variables varis, int size, ArrayList<String> parentList) {
 
         HashMap<String, Daphnia> org_pop = new HashMap<>();
-
-        for (int i  = 1; i <= size; i ++) {
-            String name = orgname + " " + i;
+        int i = 0;
+        while (i < size) {
+            int nameNum = i+1;
+            String name = orgname + "_" + nameNum;
 
             Daphnia parent = Daphniapop.get(parentList.get(i));
             double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance());
@@ -74,6 +76,7 @@ public class OrganismFactory {
             Daphnia daphnia = new Daphnia(name, gene1, gene2, fitness, ouder, symb);
             org_pop.put(daphnia.getName(), daphnia);
 
+            i += 1;
 
         }
 
