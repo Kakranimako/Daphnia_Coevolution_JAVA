@@ -27,7 +27,7 @@ public class Main {
 
         Populations dummyPops = new Populations(daphniaPop,symbiontPop,gutSymbionts,envSymbionts);
 
-        Variables dummyVars = new Variables(0.3, 1000, 1000, 2000, 0.01, 0.2, 0.2);
+        Variables dummyVars = new Variables(0.3, 12000, 1000, 2000, 0.01, 0.5, 0.4, 0.8);
         int i = 0;
         while (i < dummyVars.getNum_of_gen()) {
             Simulation simulator = new Simulation(dummyPops, dummyVars);

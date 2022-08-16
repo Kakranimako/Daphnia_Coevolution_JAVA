@@ -5,7 +5,7 @@ import Organism.Organism;
 import Organism.OrganismFactory;
 import Organism.Symbiont;
 
-import java.lang.reflect.Array;
+
 import java.util.*;
 
 public class Simulation {
@@ -14,42 +14,39 @@ public class Simulation {
 
     public Simulation (Populations allPops, Variables variables){
 
-        
+        allPops = initialisation(allPops, variables);
+        allPops = reprod(allPops, variables);
+        allPops = interaction(allPops, variables);
+
+
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                              BIG FUNCTIONS                                                  //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Populations initialisation(Populations allPops, Variables variables){
+
         HashMap<String, Symbiont> symbiontPop = OrganismFactory.CreateSymbiont("Symbiont", variables.getMax_pop_num_Symb());
         allPops.setSymbiontPop(symbiontPop);
-        
+
         HashMap<String, Daphnia> daphniaPop = OrganismFactory.CreateDaphnias("Daphnia", variables.getMax_pop_num_Daph());
         allPops.setDaphniaPop(daphniaPop);
 
         allPops.getEnvSymbionts().putAll(symbiontPop);
 
         ArrayList<Symbiont> symbiontlist = new ArrayList<>(allPops.getSymbiontPop().values());
-        for (Daphnia daphnia: allPops.getDaphniaPop().values()) {
+        for (Daphnia daphnia : allPops.getDaphniaPop().values()) {
             Symbiont symbiont = symbiontlist.get(0);
             daphnia.setpartner(symbiont.getName());
             symbiont.setpartner(daphnia.getName());
             allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
             allPops.getEnvSymbionts().remove(symbiont.getName());
             symbiontlist.remove(0);
-
         }
-
-        allPops = reprod(allPops, variables);
-
-
-
+        return allPops;
     }
 
-    public HashMap<String, Daphnia> reprodDaph(Populations allPops, Variables varis) {
-
-        Parentpicker picksLists = makeCumulFitlist(allPops, "Daph", "none");
-        picksLists = chooseParent(picksLists);
-        
-
-        // don't forget white list probleem
-
-        return OrganismFactory.CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.getMax_pop_num_Daph(), picksLists.getParentList());
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Populations reprod(Populations allPops, Variables varis) {
 
         HashMap<String, Daphnia> Dpop = reprodDaph(allPops, varis);
@@ -61,7 +58,6 @@ public class Simulation {
         HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
         allPops.setEnvSymbionts(Epop);
 
-
         HashSet<String> whitelist = createWhitelist(allPops.getDaphniaPop());
         Coupled resultsCoupling = createCoupling(allPops.getDaphniaPop(),allPops.getGutSymbionts(),whitelist);
 
@@ -69,11 +65,46 @@ public class Simulation {
 
         return allPops;
 
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Populations interaction(Populations allPops, Variables varis) {
+
+        HashMap<String, Double> virDict = cr_virDict(allPops, varis.getScarcity());
+
+        for (Daphnia daph : allPops.getDaphniaPop().values()) {
+            boolean decision = kickDecision(daph, virDict);
+            Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
+
+            if (decision) {
+                allPops = kick_and_Replace(daph, allPops);
+
+                Symbiont newSymb = allPops.getGutSymbionts().get(daph.getpartner());
+                newSymb.setFitness(1 + (varis.getVir_parS() * calcVir(newSymb, varis)));
+
+                daph.setFitness(varis.getFitnessPenalty());
+            }
+            else {
+                symb.setFitness(1 + (varis.getVir_parS() * virDict.get(daph.getName())));
+                daph.setFitness(1 - (varis.getVir_parD() * virDict.get(daph.getName())));
+            }
+        }
+
+        return allPops;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Daphnia> reprodDaph(Populations allPops, Variables varis) {
+
+        Parentpicker picksLists = makeCumulFitlist(allPops, "Daph", "none");
+        picksLists = chooseParent(picksLists);
 
 
+        // don't forget white list probleem
 
+        return OrganismFactory.CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.getMax_pop_num_Daph(), picksLists.getParentList());
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HashMap<String, Symbiont> reprodSymb(Populations allPops, Variables varis, String whichPop){
 
         HashMap<String, Symbiont> symbPop = allPops.getEnvSymbionts();
@@ -86,24 +117,20 @@ public class Simulation {
             stop = varis.getMax_pop_num_Daph();
         }
         
-        
-        
         Parentpicker picksList  = makeCumulFitlist(allPops,"Symb", whichPop);
         picksList = chooseParent(picksList);
-        
-
-        HashMap<String, Symbiont> newSymbpop = OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
-
-        return newSymbpop;
 
 
+        return OrganismFactory.CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                              SMALL FUNCTIONS                                                //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Parentpicker makeCumulFitlist(Populations allPops, String orgtype, String gut_or_env){
 
-
         ArrayList<Organism> testpoplist = new ArrayList<>(allPops.getGutSymbionts().values());
-
 
         if (orgtype.equals("Daph")) {
             testpoplist = new ArrayList<>(allPops.getDaphniaPop().values());
@@ -116,7 +143,6 @@ public class Simulation {
         double sumfit = 0;
         ArrayList<Double> cumulFitList = new ArrayList<>();
 
-
         ArrayList<String> parentCumulList = new ArrayList<>();
 
         for(Organism org : testpoplist) {
@@ -125,11 +151,11 @@ public class Simulation {
             parentCumulList.add(org.getName());
         }
 
-        Parentpicker picksList = new Parentpicker(cumulFitList, parentCumulList, new ArrayList<>());
-
-        return picksList;
-
+        return new Parentpicker(cumulFitList, parentCumulList, new ArrayList<>());
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public Parentpicker chooseParent(Parentpicker picksList){
 
         ArrayList<String> parentList = new ArrayList<>();
@@ -161,24 +187,17 @@ public class Simulation {
                     targIndex += 1;
                 }
                 oldtargIndex = targIndex;
-
-
-
-
-
             }
-            
+
             parentList.add(picksList.getParentCumulList().get(targIndex));
             i = i+1;
-
         }
         
         picksList.setParentList(parentList);
         return picksList;
     }
 
-    
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static double newGene(double parentGene, double mutChance) {
 
         double c = new Random().nextDouble();
@@ -194,10 +213,9 @@ public class Simulation {
 
             return mutStepSize;
         }
-        double mutGene = parentGene + mutStepSize;
-        return mutGene;
+        return parentGene + mutStepSize;
     }
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public  HashSet<String> createWhitelist (HashMap<String, Daphnia> Dpop) {
 
         HashSet<String> whitelist = new HashSet<String>();
@@ -208,7 +226,7 @@ public class Simulation {
 
         return whitelist;
     }
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Coupled createCoupling (HashMap<String, Daphnia> Dpop, HashMap<String, Symbiont> gutSymbs, HashSet<String> whitelist) {
 
 
@@ -275,12 +293,10 @@ public class Simulation {
 
         }
 
-        Coupled resultsCoupling = new Coupled(coupledDaphs, coupledSymbs, nonCoupledDaphs, nonCoupledSymbs);
-
-        return resultsCoupling;
+        return new Coupled(coupledDaphs, coupledSymbs, nonCoupledDaphs, nonCoupledSymbs);
 
     };
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Populations assignNonCoupled(Coupled resultCoupling, Populations allPops) {
 
         HashMap<String, Symbiont> newEnvSymbs = new HashMap<String, Symbiont>();
@@ -320,7 +336,64 @@ public class Simulation {
         return allPops;
 
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public HashMap<String, Double> cr_virDict(Populations allPops, double scarcity) {
 
+        HashMap<String, Double> virDict = new HashMap<>();
+
+        for (Daphnia daph : allPops.getDaphniaPop().values()) {
+            String symb = daph.getpartner();
+            Symbiont symby = allPops.getGutSymbionts().get(symb);
+            double virulence = 1 / (1 + Math.exp(-symby.getGene1() * (scarcity - symby.getGene2())));
+            virDict.put(daph.getName(), virulence);
+        }
+        return virDict;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Boolean kickDecision(Daphnia daph, HashMap<String, Double> virDict) {
+
+        double c = new Random().nextDouble(0, 1);
+
+        double p = 1 / (1 + Math.exp(-daph.getGene1() * (virDict.get(daph.getName()) - daph.getGene2())));
+
+        boolean decision;
+        decision = c < p;
+
+        return decision;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Populations kick_and_Replace(Daphnia daph, Populations allPops) {
+
+        String oldSymb = daph.getpartner();
+        Symbiont oldSymby = allPops.getGutSymbionts().get(oldSymb);
+
+        allPops.getGutSymbionts().remove(oldSymb);
+        allPops.getEnvSymbionts().put(oldSymb, oldSymby);
+
+        oldSymby.setpartner("Geen");
+
+        int newSymbInd = new Random().nextInt(0, allPops.getEnvSymbionts().size()-1);
+        Collection<Symbiont> symbiontCollection = allPops.getEnvSymbionts().values();
+        ArrayList<Symbiont> symbList = new ArrayList<>(symbiontCollection);
+
+        Symbiont newSymb = symbList.get(newSymbInd);
+
+        daph.setpartner(newSymb.getName());
+        newSymb.setpartner(daph.getName());
+
+        allPops.getEnvSymbionts().remove(newSymb.getName());
+        allPops.getGutSymbionts().put(newSymb.getName(), newSymb);
+
+        return allPops;
+    }
+
+    public Double calcVir(Symbiont symb, Variables varis) {
+
+        return 1 / (1 + Math.exp(-symb.getGene1() * (varis.getScarcity() - symb.getGene2())));
+    }
 }
 
