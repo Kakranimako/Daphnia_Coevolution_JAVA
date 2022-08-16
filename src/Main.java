@@ -34,11 +34,6 @@ public class Main {
 
             i+=1;
         }
-
-
     }
-
-
-
 }
 

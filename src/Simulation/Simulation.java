@@ -141,7 +141,7 @@ public class Simulation {
         while ( i <= sizelist) {
 
             double target = new Random().nextDouble(0, picksList.getCumulFitList().get(sizelist-1));
-            target = 1.3;
+
             int linkergrens = 0;
             int rechtergrens = picksList.getCumulFitList().size()-1;
             int targIndex = (linkergrens + rechtergrens)/2;
