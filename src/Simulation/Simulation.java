@@ -6,17 +6,40 @@ import Organism.OrganismFactory;
 import Organism.Symbiont;
 
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Simulation {
 
     
 
-    public Simulation (Populations allPops, Variables variables){
+    public Collected_data simulator (Populations allPops, Variables variables, Collected_data bigdata, int runNum){
 
         allPops = initialisation(allPops, variables);
-        allPops = reprod(allPops, variables);
-        allPops = interaction(allPops, variables);
+        bigdata = dataCollected(allPops, bigdata, variables, runNum, 0);
+
+
+        HashSet<Integer> genSet = new HashSet<>();
+        int multiplier = variables.getNum_of_gen()/100;
+        for (int i = 1; i <= 100; i++ ) {
+            genSet.add(i*multiplier);
+        }
+
+
+
+        for (int genNum = 1; genNum < variables.getNum_of_gen()+1d; genNum++) {
+            
+            allPops = interaction(allPops, variables);
+            allPops = reprod(allPops, variables);
+
+            if (genSet.contains(genNum)) {
+                bigdata = dataCollected(allPops, bigdata, variables, runNum, genNum);
+            }
+        }
+        
+        return bigdata;
+
 
 
     }
@@ -92,6 +115,47 @@ public class Simulation {
 
         return allPops;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Collected_data dataCollected (Populations allPops, Collected_data bigdata, Variables varis, int runNum, int genNum) {
+
+        double daphSlopesAvg = 0;
+        double daphIntsAvg = 0;
+        double symbSlopesAvg = 0;
+        double symbIntsAvg = 0;
+
+        for (Symbiont symb: allPops.getSymbiontPop().values()) {
+            symbSlopesAvg = (symbSlopesAvg + symb.getGene1())/2;
+            symbIntsAvg = (symbIntsAvg + symb.getGene2())/2;
+        }
+
+        for (Daphnia daph: allPops.getDaphniaPop().values()) {
+            daphSlopesAvg = (daphSlopesAvg + daph.getGene1())/2;
+            daphIntsAvg = (daphIntsAvg + daph.getGene2())/2;
+        }
+
+        bigdata.getGeneration().get(runNum).add(genNum);
+        bigdata.getSymbInts().get(runNum).add(symbIntsAvg);
+        bigdata.getDaphInts().get(runNum).add(daphIntsAvg);
+        bigdata.getMutStepSize().get(runNum).add(varis.getMutStepSize());
+        bigdata.getMutation_chance().get(runNum).add(varis.getMutation_chance());
+        bigdata.getVir_parS().get(runNum).add(varis.getVir_parS());
+        bigdata.getDaphSlopes().get(runNum).add(daphSlopesAvg);
+        bigdata.getVir_parD().get(runNum).add(varis.getVir_parD());
+        bigdata.getFitnessPenalty().get(runNum).add(varis.getFitnessPenalty());
+        bigdata.getSymbSlopes().get(runNum).add(symbSlopesAvg);
+        bigdata.getScarcity().get(runNum).add(varis.getScarcity());
+        
+        
+        return bigdata;
+                
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    
+    
+    
+    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HashMap<String, Daphnia> reprodDaph(Populations allPops, Variables varis) {
 
@@ -198,16 +262,15 @@ public class Simulation {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static double newGene(double parentGene, double mutChance) {
+    public static double newGene(double parentGene, double mutChance, double mutStep) {
 
         double c = new Random().nextDouble();
 
 
         double mutStepSize = 0;
         if (c < mutChance) {
-            double min = -0.03;
-            double max = 0.03;
-            double range = max - min;
+            double min = -mutStep;
+            double range = mutStep - min;
             double scaled = new Random().nextDouble() * range;
             mutStepSize = scaled + min;
 
@@ -394,6 +457,22 @@ public class Simulation {
     public Double calcVir(Symbiont symb, Variables varis) {
 
         return 1 / (1 + Math.exp(-symb.getGene1() * (varis.getScarcity() - symb.getGene2())));
+    }
+
+    public void toTXT (Collected_data bigData, MeanData meanie) throws IOException {
+
+        FileWriter file = new FileWriter("testrun2.csv");
+
+        for (int i = 0; i < meanie.getMeanDaphInts().size(); i++) {
+
+            String dataLine = String.valueOf((bigData.getGeneration().get(1).get(i))) + ","
+                    + String.valueOf(bigData.getScarcity().get(1).get(i)) + "," + String.valueOf(bigData.getVir_parD().get(1).get(i)) + ","
+                    + String.valueOf(bigData.getVir_parS().get(1).get(i)) + "," + String.valueOf(meanie.getMeanDaphSlopes().get(i)) + ","
+                    + String.valueOf(meanie.getMeanDaphInts().get(i)) + "," + String.valueOf(meanie.getMeanSymbSLopes().get(i)) + ","
+                    + String.valueOf(meanie.getMeanSymbInts().get(i));
+            file.write(dataLine + "\n");
+        }
+        file.close();
     }
 }
 

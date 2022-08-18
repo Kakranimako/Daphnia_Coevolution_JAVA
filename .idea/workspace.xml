@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java: reprod and intiation func done">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:interaction done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Variables.java" afterDir="false" />
     </list>
@@ -124,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660611563869</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="altversion in java:interaction done">
+      <created>1660691468700</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1660691468700</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,6 +151,18 @@
     <MESSAGE value="altversion in java 2" />
     <MESSAGE value="altversion in java 2: late night working on it" />
     <MESSAGE value="altversion in java: reprod and intiation func done" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java: reprod and intiation func done" />
+    <MESSAGE value="altversion in java:interaction done" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:interaction done" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Simulation/MeanData.java</url>
+          <line>63</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

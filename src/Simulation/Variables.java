@@ -9,9 +9,10 @@ public class Variables {
     private double vir_parD;
     private double vir_parS;
 
+    private double mutStepSize;
     private double fitnessPenalty;
 
-    public Variables(double scarcity, int num_of_gen, int max_pop_num_Daph, int max_pop_num_Symb, double mutation_chance, double vir_parD, double vir_parS, double fitnessPenalty) {
+    public Variables(double scarcity, int num_of_gen, int max_pop_num_Daph, int max_pop_num_Symb, double mutation_chance, double vir_parD, double vir_parS, double fitnessPenalty, double mutStepSize) {
         this.scarcity = scarcity;
         this.num_of_gen = num_of_gen;
         this.max_pop_num_Daph = max_pop_num_Daph;
@@ -20,6 +21,7 @@ public class Variables {
         this.vir_parD = vir_parD;
         this.vir_parS = vir_parS;
         this.fitnessPenalty = fitnessPenalty;
+        this.mutStepSize = mutStepSize;
     }
 
 
@@ -88,6 +90,14 @@ public class Variables {
         this.fitnessPenalty = fitnessPenalty;
     }
 
+    public double getMutStepSize() {
+        return mutStepSize;
+    }
+
+    public void setMutStepSize(double mutStepSize) {
+        this.mutStepSize = mutStepSize;
+    }
+
     @Override
     public String toString() {
         return "Variables{" +
@@ -98,6 +108,7 @@ public class Variables {
                 ", mutation_chance=" + mutation_chance +
                 ", vir_parD=" + vir_parD +
                 ", vir_parS=" + vir_parS +
+                ", mutStepSize=" + mutStepSize +
                 ", fitnessPenalty=" + fitnessPenalty +
                 '}';
     }

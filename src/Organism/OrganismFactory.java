@@ -44,8 +44,8 @@ public class OrganismFactory {
             String name = orgname + " " + start;
 
             Symbiont parent = Symbiontpop.get(parentList.get(0));
-            double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance());
-            double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance());
+            double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance(), varis.getMutStepSize());
+            double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance(), varis.getMutStepSize());
             double fitness = 1;
             String ouder = parent.getName();
             String host = parent.getpartner();
@@ -67,8 +67,8 @@ public class OrganismFactory {
             String name = orgname + "_" + nameNum;
 
             Daphnia parent = Daphniapop.get(parentList.get(i));
-            double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance());
-            double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance());
+            double gene1 = Simulation.newGene(parent.getGene1(), varis.getMutation_chance(), varis.getMutStepSize());
+            double gene2 = Simulation.newGene(parent.getGene2(), varis.getMutation_chance(), varis.getMutStepSize());
             double fitness = 1;
             String ouder = parent.getName();
             String symb = parent.getpartner();
