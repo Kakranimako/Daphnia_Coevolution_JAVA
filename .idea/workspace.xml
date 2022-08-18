@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:interaction done">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:data collection almost done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660691468700</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="altversion in java:data collection almost done">
+      <created>1660782706444</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1660782706445</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,7 +156,8 @@
     <MESSAGE value="altversion in java 2: late night working on it" />
     <MESSAGE value="altversion in java: reprod and intiation func done" />
     <MESSAGE value="altversion in java:interaction done" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:interaction done" />
+    <MESSAGE value="altversion in java:data collection almost done" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:data collection almost done" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

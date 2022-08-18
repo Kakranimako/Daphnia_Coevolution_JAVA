@@ -453,12 +453,12 @@ public class Simulation {
 
         return allPops;
     }
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Double calcVir(Symbiont symb, Variables varis) {
 
         return 1 / (1 + Math.exp(-symb.getGene1() * (varis.getScarcity() - symb.getGene2())));
     }
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigData, MeanData meanie) throws IOException {
 
         FileWriter file = new FileWriter("testrun2.csv");
@@ -473,6 +473,51 @@ public class Simulation {
             file.write(dataLine + "\n");
         }
         file.close();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public ArrayList<Double> linear (Variables varis, double specificParam, double slope, double vertShift) {
+
+        ArrayList<Double> linearList = new ArrayList<>();
+
+        for (int i = 0; i < varis.getNum_of_gen(); i++) {
+            linearList.add(slope*i + vertShift);
+        }
+        return linearList;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public ArrayList<Double> sinusfunc (Variables varis, double specificParam, double slope, double horizonShift) {
+
+        ArrayList<Double> sinusList = new ArrayList<>();
+        double a = slope * specificParam/2;
+        double c = specificParam/2;
+
+        for (int i = 0; i < varis.getNum_of_gen(); i++) {
+
+            sinusList.add(a * Math.sin((2*Math.PI*i)/varis.getNum_of_gen() - horizonShift) +c);
+
+        }
+        return sinusList;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public ArrayList<Double> stepfunc (Variables varis, double specificParam, int phases) {
+
+        ArrayList<Double> stepList = new ArrayList<>();
+
+        int length = varis.getNum_of_gen();
+        double multiplier = specificParam/phases;
+        int blocks = length/phases;
+
+        for (int i = 1; i <= phases; i++) {
+            for (int u = 1; u <= blocks; u++) {
+                stepList.add(multiplier*i*blocks);
+            }
+        }
+        return stepList;
     }
 }
 
