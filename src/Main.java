@@ -31,46 +31,78 @@ public class Main {
 
         Populations dummyPops = new Populations(daphniaPop,symbiontPop,gutSymbionts,envSymbionts);
 
-        Variables dummyVars = new Variables(0.3, 1000, 1000, 2000, 0.01, 0.5, 0.4, 0.8, 0.03);
-        int runs = 100;
+        Variables dummyVars = new Variables( new HashMap<>());
 
-        ArrayList<ArrayList<Integer>> generations = new ArrayList<>();
-        ArrayList<ArrayList<Double>> scarcity = new ArrayList<>();
-        ArrayList<ArrayList<Double>> vir_parD = new ArrayList<>();
-        ArrayList<ArrayList<Double>> vir_parS = new ArrayList<>();
-        ArrayList<ArrayList<Double>> fitnessPenalty = new ArrayList<>();
-        ArrayList<ArrayList<Double>> mutation_chance = new ArrayList<>();
-        ArrayList<ArrayList<Double>> mutStepSize = new ArrayList<>();
-        ArrayList<ArrayList<Double>> daphSlopes = new ArrayList<>();
-        ArrayList<ArrayList<Double>> daphInts = new ArrayList<>();
-        ArrayList<ArrayList<Double>> symbSlopes = new ArrayList<>();
-        ArrayList<ArrayList<Double>> symbInts = new ArrayList<>();
+        dummyVars.getVarDict().put("scarcity", 0.3);
+        dummyVars.getVarDict().put("num_of_gens", 7000.0);
+        dummyVars.getVarDict().put("daphPopSize", 1000.0);
+        dummyVars.getVarDict().put("symbPopSize", 2000.0);
+        dummyVars.getVarDict().put("mut_chance", 0.0);
+        dummyVars.getVarDict().put("mutStepSize", 0.0);
+        dummyVars.getVarDict().put("vir_parD", 0.0);
+        dummyVars.getVarDict().put("vir_parS", 0.0);
+        dummyVars.getVarDict().put("fitPen", 1.0);
 
-        Collected_data bigData = new Collected_data(generations, scarcity, vir_parD, vir_parS, fitnessPenalty, mutation_chance, mutStepSize, daphSlopes, daphInts, symbSlopes, symbInts);
 
-        for (int runNum = 0; runNum < runs; runNum++) {
-            bigData.getScarcity().add(runNum, new ArrayList<Double>());
-            bigData.getDaphInts().add(runNum, new ArrayList<Double>());
-            bigData.getDaphSlopes().add(runNum, new ArrayList<Double>());
-            bigData.getSymbSlopes().add(runNum, new ArrayList<Double>());
-            bigData.getSymbInts().add(runNum, new ArrayList<Double>());
-            bigData.getFitnessPenalty().add(runNum, new ArrayList<Double>());
-            bigData.getMutation_chance().add(runNum, new ArrayList<Double>());
-            bigData.getMutStepSize().add(runNum, new ArrayList<Double>());
-            bigData.getGeneration().add(runNum, new ArrayList<Integer>());
-            bigData.getVir_parD().add(runNum, new ArrayList<Double>());
-            bigData.getVir_parS().add(runNum, new ArrayList<Double>());
+
+        HashMap<String, HashMap<Double, ArrayList<Double>>> columns = new HashMap<>();
+        
+        HashMap<Double, ArrayList<Double>> generations = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> scarcity = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> vir_parD = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> vir_parS = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> fitnessPenalty = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> mutation_chance = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> mutStepSize = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> daphSlopes = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> daphInts = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> symbSlopes = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> symbInts = new HashMap<>();
+
+        Collected_data bigData = new Collected_data(columns);
+
+
+        bigData.getColumns().put("generations", generations);
+        bigData.getColumns().put("vir_parD", vir_parD);
+        bigData.getColumns().put("vir_parS", vir_parS);
+        bigData.getColumns().put("fitPen", fitnessPenalty);
+        bigData.getColumns().put("mut_chance", mutation_chance);
+        bigData.getColumns().put("mutStepSize", mutStepSize);
+        bigData.getColumns().put("daphSlopes", daphSlopes);
+        bigData.getColumns().put("daphInts", daphInts);
+        bigData.getColumns().put("symbSlopes", symbSlopes);
+        bigData.getColumns().put("symbInts", symbInts);
+        bigData.getColumns().put("scarcity", scarcity);
+
+        ArrayList<Double> datapoints = new ArrayList<>();
+        double multiplier = dummyVars.getVarDict().get("num_of_gens")/100.0;
+        for (int i = 0; i <= 100; i++ ) {
+            datapoints.add(i*multiplier);
         }
+
+        for (HashMap<Double, ArrayList<Double>> column: bigData.getColumns().values()) {
+
+            for (Double datapoint : datapoints) {
+
+                column.put(datapoint, new ArrayList<>());
+
+            }
+        }
+
+
 
         Simulation simulator = new Simulation();
 
+        int runs = 7;
+        String filename = "testrun3";
+
         for (int runNum = 0; runNum < runs; runNum++) {
-            bigData = simulator.simulator(dummyPops, dummyVars, bigData, runNum);
+            bigData = simulator.simulator(dummyPops, dummyVars.getVarDict(), bigData, datapoints, runNum);
         }
 
         MeanData maeniee = new MeanData().calcMeansVariance(bigData);
 
-        simulator.toTXT(bigData, maeniee);
+        simulator.toTXT(bigData, maeniee, filename);
 
     }
 
