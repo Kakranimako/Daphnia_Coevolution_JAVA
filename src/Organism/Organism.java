@@ -18,12 +18,12 @@ public class Organism {
         this.fitness = fitness;
     }
     public Organism(String name, double gene1, double gene2, double fitness, String ouder) {
-        this(name, gene1, gene2,fitness);
+        this(name, gene1, gene2, fitness);
         this.ouder = ouder;
     }
 
     public Organism(String name, double gene1, double gene2, double fitness, String ouder, String partner) {
-        this(name, gene1, gene2,fitness, ouder);
+        this(name, gene1, gene2, fitness, ouder);
         this.partner = partner;
     }
 

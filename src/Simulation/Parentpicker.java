@@ -2,6 +2,7 @@ package Simulation;
 
 import java.util.ArrayList;
 
+
 public class Parentpicker {
 
     private ArrayList<Double> cumulFitList = new ArrayList<>();
@@ -9,6 +10,10 @@ public class Parentpicker {
     private ArrayList<String> parentCumulList = new ArrayList<>();
 
     private ArrayList<String> parentList = new ArrayList<>();
+
+    public Parentpicker () {
+
+    }
 
     public Parentpicker(ArrayList<Double> cumulFitList, ArrayList<String> parentCumulList, ArrayList<String> parentList) {
         this.cumulFitList = cumulFitList;

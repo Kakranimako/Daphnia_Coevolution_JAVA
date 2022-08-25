@@ -47,15 +47,15 @@ public class MeanData {
 
         for (double datapoint : bigdata.getColumns().get("generations").keySet()) {
 
-            double meany = calcAvg(bigdata.getColumns().get("daphSlopes").get(datapoint));
-            meanDaphSlopes.put(datapoint, meany);
+            double meanDaph = calcAvg(bigdata.getColumns().get("daphSlopes").get(datapoint));
+            meanDaphSlopes.put(datapoint, meanDaph);
 
-            varianceDaphSlopes.put(datapoint, calcVariance(bigdata.getColumns().get("daphSlopes").get(datapoint), meany));
+            varianceDaphSlopes.put(datapoint, calcVariance(bigdata.getColumns().get("daphSlopes").get(datapoint), meanDaph));
 
-            double meanInts = calcAvg(bigdata.getColumns().get("daphInts").get(datapoint));
-            meanDaphInts.put(datapoint, meanInts);
+            double DaphInts = calcAvg(bigdata.getColumns().get("daphInts").get(datapoint));
+            meanDaphInts.put(datapoint, DaphInts);
 
-            varianceDaphInts.put(datapoint, calcVariance(bigdata.getColumns().get("daphInts").get(datapoint), meanInts));
+            varianceDaphInts.put(datapoint, calcVariance(bigdata.getColumns().get("daphInts").get(datapoint), DaphInts));
 
 
             double meansymb = calcAvg(bigdata.getColumns().get("symbSlopes").get(datapoint));
@@ -63,10 +63,10 @@ public class MeanData {
 
             varianceSymbSlopes.put(datapoint, calcVariance(bigdata.getColumns().get("symbSlopes").get(datapoint), meansymb));
 
-            double meansymbInts = calcAvg(bigdata.getColumns().get("symbInts").get(datapoint));
-            meanSymbInts.put(datapoint, meansymbInts);
+            double symbInts = calcAvg(bigdata.getColumns().get("symbInts").get(datapoint));
+            meanSymbInts.put(datapoint, symbInts);
 
-            varianceSymbInts.put(datapoint, calcVariance(bigdata.getColumns().get("symbInts").get(datapoint), meansymbInts));
+            varianceSymbInts.put(datapoint, calcVariance(bigdata.getColumns().get("symbInts").get(datapoint), symbInts));
 
 
         }

@@ -14,17 +14,53 @@ public class Simulation {
 
     
 
-    public Collected_data simulator (Populations allPops, HashMap<String, Double> variables, Collected_data bigdata, ArrayList<Double> datapoints, int runNum){
+    public Collected_data simulator (HashMap<String, Double> variables, Collected_data bigdata, ArrayList<Double> datapoints, String variablePar, String mode, HashMap<String, Double> modeArgs){
 
+        HashMap<String, Daphnia> daphniaPop = new HashMap<>();
+
+        HashMap<String, Symbiont> symbiontPop = new HashMap<>();
+
+        HashMap<String, Symbiont> gutSymbionts = new HashMap<>();
+
+        HashMap<String, Symbiont> envSymbionts = new HashMap<>();
+
+
+        Populations allPops = new Populations(daphniaPop,symbiontPop,gutSymbionts,envSymbionts);
+
+
+        ArrayList<Double> varList = new ArrayList<>();
+
+        if (mode.equals("sinus")) {
+             varList = sinusfunc(variables, variables.get(variablePar), modeArgs.get("horizonShift"), modeArgs.get("period"));
+        }
+        else if (mode.equals("linear")) {
+            varList = linear(variables, modeArgs.get("slope"), modeArgs.get("vertShift"));
+        }
+        else if (mode.equals("step")) {
+            varList = stepfunc(variables, variables.get(variablePar), modeArgs.get("phases"));
+        }
+        else if (mode.equals("random")) {
+            varList = stochasticfunc(variables, modeArgs.get("mean"), modeArgs.get("variance"));
+        }
+
+
+        if (!mode.equals("static")) {
+            variables.put(variablePar, varList.get(0));
+        }
 
         allPops = initialisation(allPops, variables);
         bigdata = dataCollected(allPops, bigdata, variables,0.0);
 
         for (double genNum = 1.0; genNum < variables.get("num_of_gens")+1; genNum++) {
-            
-            //allPops = interaction(allPops, variables);
+
+           if (!mode.equals("static")) {
+               variables.put(variablePar, varList.get((int) genNum));
+           }
+
+            allPops = interaction(allPops, variables);
 
             allPops = reprod(allPops, variables);
+
 
             if (datapoints.contains(genNum)) {
                 bigdata = dataCollected(allPops, bigdata, variables, genNum);
@@ -45,19 +81,47 @@ public class Simulation {
         HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("symbPopSize"));
         allPops.setSymbiontPop(symbiontPop);
 
+        double symbSlopesAvg = 0;
+        double symbIntsAvg = 0;
+
+        for (Symbiont symb: allPops.getSymbiontPop().values()) {
+            symbSlopesAvg += symb.getGene1();
+            symbIntsAvg += symb.getGene2();
+        }
+        symbSlopesAvg = symbSlopesAvg/allPops.getSymbiontPop().size();
+        symbIntsAvg = symbIntsAvg/allPops.getSymbiontPop().size();
+
+        System.out.println(symbSlopesAvg+ "  " + symbIntsAvg);
+
         HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
 
-        allPops.getEnvSymbionts().putAll(symbiontPop);
 
         ArrayList<Symbiont> symbiontlist = new ArrayList<>(allPops.getSymbiontPop().values());
+        Collections.shuffle(symbiontlist);
+
         for (Daphnia daphnia : allPops.getDaphniaPop().values()) {
-            Symbiont symbiont = symbiontlist.get(0);
+            int symbInd = new Random().nextInt(0, allPops.getDaphniaPop().size());
+            Symbiont symbiont = symbiontlist.get(symbInd);
             daphnia.setpartner(symbiont.getName());
             symbiont.setpartner(daphnia.getName());
             allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
-            allPops.getEnvSymbionts().remove(symbiont.getName());
-            symbiontlist.remove(0);
+            symbiontlist.remove(symbInd);
+        }
+        double symbSlopesAvg2 = 0;
+        double symbIntsAvg2 = 0;
+
+        for (Symbiont symb: allPops.getGutSymbionts().values()) {
+            symbSlopesAvg2 += symb.getGene1();
+            symbIntsAvg2 += symb.getGene2();
+        }
+        symbSlopesAvg2 = symbSlopesAvg2/allPops.getGutSymbionts().size();
+        symbIntsAvg2 = symbIntsAvg2/allPops.getGutSymbionts().size();
+
+        System.out.println("Gut" + symbSlopesAvg2 + "  " + symbIntsAvg2);
+
+        for (Symbiont symbiont: symbiontlist) {
+            allPops.getEnvSymbionts().put(symbiont.getName(), symbiont);
         }
         return allPops;
     }
@@ -70,6 +134,8 @@ public class Simulation {
 
         HashMap<String, Symbiont> Gpop = reprodSymb(allPops, varis, "Gut");
         allPops.setGutSymbionts(Gpop);
+
+
 
         HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
         allPops.setEnvSymbionts(Epop);
@@ -92,8 +158,8 @@ public class Simulation {
 
         for (Daphnia daph : allPops.getDaphniaPop().values()) {
             boolean decision = kickDecision(daph, virDict);
-            Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
-            symb.setFitness(1);
+            Symbiont oldsymb = allPops.getGutSymbionts().get(daph.getpartner());
+            oldsymb.setFitness(1);
 
             if (decision) {
                 allPops = kick_and_Replace(daph, allPops);
@@ -102,9 +168,10 @@ public class Simulation {
                 newSymb.setFitness(1 + (varis.get("vir_parS") * calcVir(newSymb, varis)));
 
                 daph.setFitness(varis.get("fitPen"));
+                oldsymb.setFitness(varis.get("fitPenSymb"));
             }
             else {
-                symb.setFitness(1 + (varis.get("vir_parS") * virDict.get(daph.getName())));
+                oldsymb.setFitness(1 + (varis.get("vir_parS") * virDict.get(daph.getName())));
                 daph.setFitness(1 - (varis.get("vir_parD") * virDict.get(daph.getName())));
             }
         }
@@ -141,7 +208,7 @@ public class Simulation {
 
 
     
-        ArrayList<String> colHeadersParams = new ArrayList<String>();
+        ArrayList<String> colHeadersParams = new ArrayList<>();
         colHeadersParams.add("scarcity");
         colHeadersParams.add("vir_parD");
         colHeadersParams.add("vir_parS");
@@ -149,7 +216,7 @@ public class Simulation {
         colHeadersParams.add("mutStepSize");
         colHeadersParams.add("mut_chance");
 
-        ArrayList<String> colHeadersData = new ArrayList<String>();
+        ArrayList<String> colHeadersData = new ArrayList<>();
         colHeadersData.add("daphSlopes");
         colHeadersData.add("daphInts");
         colHeadersData.add("symbSlopes");
@@ -162,7 +229,7 @@ public class Simulation {
             bigdata.getColumns().get("generations").get(genNum).add(genNum);
         }
 
-        for (String columnname2 : avgDataDict.keySet()) {
+        for (String columnname2 : colHeadersData) {
 
             HashMap<Double, ArrayList<Double>> column = bigdata.getColumns().get(columnname2);
             column.get(genNum).add(avgDataDict.get(columnname2));
@@ -184,13 +251,16 @@ public class Simulation {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HashMap<String, Daphnia> reprodDaph(Populations allPops, HashMap<String, Double> varis) {
 
-        Parentpicker picksLists = makeCumulFitlist(allPops, "Daph", "none");
+        Parentpicker picksLists = new Parentpicker();
+        picksLists = makeCumulFitlist(allPops, "Daph", "none");
         picksLists = chooseParent(picksLists);
+
 
 
         // don't forget white list probleem
 
         return new OrganismFactory().CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.get("daphPopSize"), picksLists.getParentList());
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,33 +275,22 @@ public class Simulation {
             start = 1;
             stop = varis.get("daphPopSize");
         }
-        
-        Parentpicker picksList  = makeCumulFitlist(allPops,"Symb", whichPop);
+        Parentpicker picksList = new Parentpicker();
+        picksList  = makeCumulFitlist(allPops,"Symb", whichPop);
         picksList = chooseParent(picksList);
 
-        HashSet<String> parentSet = new HashSet<>();
-        for (String parent: picksList.getParentList()) {
-            parentSet.add(parent);
-
-        }
-
-        double symbSlopesAvg = 0;
-        double symbIntsAvg = 0;
-        double symbfit = 0;
-
-        for (String parentname: parentSet) {
-            Symbiont symb = symbPop.get(parentname);
-            symbSlopesAvg += symb.getGene1();
-            symbIntsAvg += symb.getGene2();
-            symbfit += symb.getFitness();
-        }
-        symbSlopesAvg = symbSlopesAvg/parentSet.size();
-        symbIntsAvg = symbIntsAvg/parentSet.size();
-        symbfit = symbfit/parentSet.size();
 
 
-        return new OrganismFactory().CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
+        HashSet<String> parentSet = new HashSet<>(picksList.getParentList());
+
+
+        symbPop = new OrganismFactory().CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
+
+
+
+        return symbPop;
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                              SMALL FUNCTIONS                                                //
@@ -303,6 +362,9 @@ public class Simulation {
         }
         
         picksList.setParentList(parentList);
+
+
+
         return picksList;
     }
 
@@ -312,20 +374,19 @@ public class Simulation {
         double c = new Random().nextDouble();
         double newgene = parentGene;
 
-        double mutStepSize = 0;
+
         if (c < mutChance) {
-            double min = -mutStep;
-            double range = mutStep - min;
-            double scaled = (new Random().nextDouble()) * range;
-            mutStepSize = scaled + min;
-            newgene = parentGene + mutStepSize;
+
+            double scaled = new Random().nextDouble(-mutStep, mutStep);
+
+            newgene = parentGene + scaled;
         }
         return newgene;
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public  HashSet<String> createWhitelist (HashMap<String, Daphnia> Dpop) {
 
-        HashSet<String> whitelist = new HashSet<String>();
+        HashSet<String> whitelist = new HashSet<>();
 
         for (Daphnia daphnia: Dpop.values()) {
             whitelist.add(daphnia.getOuder());
@@ -400,18 +461,19 @@ public class Simulation {
 
         return new Coupled(coupledDaphs, coupledSymbs, nonCoupledDaphs, nonCoupledSymbs);
 
-    };
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Populations assignNonCoupled(Coupled resultCoupling, Populations allPops) {
 
-        HashMap<String, Symbiont> newEnvSymbs = new HashMap<String, Symbiont>();
+        HashMap<String, Symbiont> newEnvSymbs = new HashMap<>();
         newEnvSymbs.putAll(allPops.getEnvSymbionts());
         newEnvSymbs.putAll(resultCoupling.getNonCoupledSymbs());
         ArrayList<Symbiont> newEnvSymbsList = new ArrayList<>(newEnvSymbs.values());
         Collections.shuffle(newEnvSymbsList);
 
-        HashMap<String, Daphnia> newCoupledDaph = new HashMap<String, Daphnia>();
-        HashMap<String, Symbiont> newCoupledSymbs = new HashMap<String, Symbiont>();
+        HashMap<String, Daphnia> newCoupledDaph = new HashMap<>();
+        HashMap<String, Symbiont> newCoupledSymbs = new HashMap<>();
 
         for (Daphnia daph : resultCoupling.getNonCoupledDaphs().values()) {
 
@@ -439,7 +501,7 @@ public class Simulation {
         allPops.setGutSymbionts(resultCoupling.getCoupledSymbs());
         allPops.getGutSymbionts().putAll(newCoupledSymbs);
 
-        HashMap<String, Symbiont> newSymbpop = new HashMap<String, Symbiont>();
+        HashMap<String, Symbiont> newSymbpop = new HashMap<>();
         newSymbpop.putAll(newEnvSymbs);
         newSymbpop.putAll(allPops.getGutSymbionts());
 
@@ -461,7 +523,7 @@ public class Simulation {
         for (Daphnia daph : allPops.getDaphniaPop().values()) {
             String symb = daph.getpartner();
             Symbiont symby = allPops.getGutSymbionts().get(symb);
-            double virulence = 1 / (1 + Math.exp(-symby.getGene1() * (scarcity - symby.getGene2())));
+            double virulence = 1 / (1 + Math.exp(symby.getGene1() * (scarcity - symby.getGene2())));
             virDict.put(daph.getName(), virulence);
         }
         return virDict;
@@ -473,7 +535,7 @@ public class Simulation {
 
         double c = new Random().nextDouble(0, 1);
 
-        double p = 1 / (1 + Math.exp(-daph.getGene1() * (virDict.get(daph.getName()) - daph.getGene2())));
+        double p = 1 / (1 + Math.exp(daph.getGene1() * (virDict.get(daph.getName()) - daph.getGene2())));
 
         boolean decision;
         decision = c < p;
@@ -509,7 +571,7 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Double calcVir(Symbiont symb, HashMap<String, Double> varis) {
 
-        return 1 / (1 + Math.exp(-symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
+        return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, String filename) throws IOException {
@@ -538,47 +600,65 @@ public class Simulation {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ArrayList<Double> linear (HashMap<String, Double> varis, double specificParam, double slope, double vertShift) {
+    public ArrayList<Double> linear (HashMap<String, Double> varis, double slope, double vertShift) {
 
         ArrayList<Double> linearList = new ArrayList<>();
 
         for (int i = 0; i < varis.get("num_of_gens"); i++) {
             linearList.add(slope*i + vertShift);
         }
+        
+        linearList.add(linearList.get(linearList.size()-1));
         return linearList;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ArrayList<Double> sinusfunc (HashMap<String, Double> varis, double specificParam, double slope, double horizonShift) {
+    public ArrayList<Double> sinusfunc (HashMap<String, Double> varis, double specificParam, double horizonShift, double period) {
 
         ArrayList<Double> sinusList = new ArrayList<>();
-        double a = slope * specificParam/2;
+        double a = specificParam/2;
         double c = specificParam/2;
 
-        for (int i = 0; i < varis.get("num_of_gens"); i++) {
+        for (int i = 0; i < varis.get("num_of_gens")+1; i++) {
 
-            sinusList.add(a * Math.sin((2*Math.PI*i)/varis.get("num_of_gens") - horizonShift) +c);
+            sinusList.add(a * Math.sin((2*Math.PI*i)/(period*varis.get("num_of_gens")) - horizonShift) +c);
 
         }
+
+        sinusList.add(sinusList.get(sinusList.size()-1));
         return sinusList;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ArrayList<Double> stepfunc (HashMap<String, Double> varis, double specificParam, int phases) {
+    public ArrayList<Double> stepfunc (HashMap<String, Double> varis, double specificParam, double phases) {
 
         ArrayList<Double> stepList = new ArrayList<>();
 
-        double length = varis.get("num_of_gens");
+        double length = varis.get("num_of_gens")+1;
         double multiplier = specificParam/phases;
         double blocks = length/phases;
 
         for (int i = 1; i <= phases; i++) {
             for (int u = 1; u <= blocks; u++) {
-                stepList.add(multiplier*i*blocks);
+                stepList.add(multiplier*i);
             }
         }
+        stepList.add(stepList.get(stepList.size()-1));
         return stepList;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public ArrayList<Double> stochasticfunc (HashMap<String, Double> varis, double mean, double variance) {
+
+        ArrayList<Double> stocList = new ArrayList<>();
+        double length = varis.get("num_of_gens")+1;
+
+        for (int i = 1; i < length; i++) {
+            stocList.add(new Random().nextDouble(mean, variance));
+        }
+        stocList.add(stocList.get(stocList.size()-1));
+        return stocList;
     }
 }
 

@@ -62,7 +62,7 @@ public class OrganismFactory {
     }
 
     public HashMap<String, Daphnia> CreateNewIndvsDaphnia(String orgname, HashMap<String, Daphnia> Daphniapop, HashMap<String, Double> varis, double size, ArrayList<String> parentList) {
-
+        Collections.shuffle(parentList);
         HashMap<String, Daphnia> org_pop = new HashMap<>();
         int i = 0;
         while (i < size) {
