@@ -27,11 +27,36 @@ public class Main {
         modeArgs.put("period", 1.0);
         modeArgs.put("phases", 5.0);
         modeArgs.put("vertShift", 0.0);
+        modeArgs.put("mean", 0.4);
+        modeArgs.put("variance", 1.0);
 
-        Experiment exp1 = new Experiment("test5", 5, 0.3, 2000, 1000,
-                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.3,
-                "scarcity", "linear", modeArgs);
+        //"different modes are: linear, static, sinus, step, random"
 
+        Experiment exp1 = new Experiment("scar0_0", 4, 0.0, 1000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "scarcity", "random", modeArgs);
+
+        System.out.println("done");
+
+        exp1 = new Experiment("scar0_2", 100, 0.2, 2000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "fitPen", "static", modeArgs);
+
+        exp1 = new Experiment("scar0_4", 100, 0.4, 2000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "fitPen", "static", modeArgs);
+
+        exp1 = new Experiment("scar0_6", 100, 0.6, 2000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "fitPen", "static", modeArgs);
+
+        exp1 = new Experiment("scar0_8", 100, 0.8, 2000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "fitPen", "static", modeArgs);
+
+        exp1 = new Experiment("scar1_0", 100, 1.0, 2000, 1000,
+                2000, 0.01, 0.01, 0.5, 0.4, 1.0, 1.0,
+                "fitPen", "static", modeArgs);
 
 
 

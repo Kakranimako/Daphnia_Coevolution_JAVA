@@ -81,17 +81,7 @@ public class Simulation {
         HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("symbPopSize"));
         allPops.setSymbiontPop(symbiontPop);
 
-        double symbSlopesAvg = 0;
-        double symbIntsAvg = 0;
 
-        for (Symbiont symb: allPops.getSymbiontPop().values()) {
-            symbSlopesAvg += symb.getGene1();
-            symbIntsAvg += symb.getGene2();
-        }
-        symbSlopesAvg = symbSlopesAvg/allPops.getSymbiontPop().size();
-        symbIntsAvg = symbIntsAvg/allPops.getSymbiontPop().size();
-
-        System.out.println(symbSlopesAvg+ "  " + symbIntsAvg);
 
         HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
@@ -108,17 +98,7 @@ public class Simulation {
             allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
             symbiontlist.remove(symbInd);
         }
-        double symbSlopesAvg2 = 0;
-        double symbIntsAvg2 = 0;
 
-        for (Symbiont symb: allPops.getGutSymbionts().values()) {
-            symbSlopesAvg2 += symb.getGene1();
-            symbIntsAvg2 += symb.getGene2();
-        }
-        symbSlopesAvg2 = symbSlopesAvg2/allPops.getGutSymbionts().size();
-        symbIntsAvg2 = symbIntsAvg2/allPops.getGutSymbionts().size();
-
-        System.out.println("Gut" + symbSlopesAvg2 + "  " + symbIntsAvg2);
 
         for (Symbiont symbiont: symbiontlist) {
             allPops.getEnvSymbionts().put(symbiont.getName(), symbiont);
@@ -578,7 +558,8 @@ public class Simulation {
 
         FileWriter file = new FileWriter(filename +".csv");
         file.write("Generation" + "," + "scarcity" + "," + "vir_parD" + "," + "vir_parS" + ","
-                + "daphSlopes" + "," + "daphInts" + "," + "symbSlopes" + "," + "symbInts" + "\n");
+                + "daphSlopes" + "," +  "dSlopesStD" + "," + "daphInts" + "," + "dIntsStd" + "," +
+                "symbSlopes" + "," + "sSlopesStD" + "," + "symbInts" + "," + "sIntsStD" + "\n");
 
         for (double datapoint: bigdata.getColumns().get("generations").keySet()) {
 
@@ -587,9 +568,13 @@ public class Simulation {
                     String.valueOf(bigdata.getColumns().get("vir_parD").get(datapoint).get(0)) + "," +
                     String.valueOf(bigdata.getColumns().get("vir_parS").get(datapoint).get(0)) + "," +
                     String.valueOf(meanie.getMeanDaphSlopes().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVarianceDaphSlopes().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanDaphInts().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanSymbSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanSymbInts().get(datapoint));
+                    String.valueOf(meanie.getVarianceSymbSlopes().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanSymbInts().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint));
 
             file.write(dataline + "\n");
         }

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:data collection but something wrong">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:experiment class created. almost done?">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/Organism.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Organism.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/MeanData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/MeanData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Parentpicker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Parentpicker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660832075065</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="altversion in java:experiment class created. almost done?">
+      <created>1661470244582</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1661470244582</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,29 +176,20 @@
     <MESSAGE value="altversion in java:interaction done" />
     <MESSAGE value="altversion in java:data collection almost done" />
     <MESSAGE value="altversion in java:data collection almost done 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:data collection almost done 2" />
+    <MESSAGE value="altversion in java:experiment class created. almost done?" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:experiment class created. almost done?" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Simulation/MeanData.java</url>
-          <line>74</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>36</line>
+          <line>61</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>286</line>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>647</line>
+          <line>632</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
       </breakpoints>

@@ -30,7 +30,7 @@ public class Experiment {
     dummyVars.getVarDict().put("vir_parD", vir_parD);
     dummyVars.getVarDict().put("vir_parS", vir_parS);
     dummyVars.getVarDict().put("fitPen", fitPen);
-        dummyVars.getVarDict().put("fitPenSymb", fitPenSymb);
+    dummyVars.getVarDict().put("fitPenSymb", fitPenSymb);
 
 
 

@@ -93,7 +93,7 @@ public class MeanData {
         for (int i = 0; i < listy.size(); i++) {
             variance += (listy.get(i) - mean) * (listy.get(i) - mean);
         }
-        return variance / listy.size();
+        return Math.sqrt(variance / listy.size())/Math.sqrt(listy.size());
     }
 
     public HashMap<Double, Double> getMeanDaphSlopes() {
