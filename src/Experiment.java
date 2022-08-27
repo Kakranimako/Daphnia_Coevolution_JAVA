@@ -86,7 +86,7 @@ public class Experiment {
     }
 
     MeanData maeniee = new MeanData().calcMeansVariance(bigData);
-    new Simulation().toTXT(bigData, maeniee, expName);
+    new Simulation().toTXT(bigData, maeniee, dummyVars.getVarDict(), mode, expName);
 
 }
 

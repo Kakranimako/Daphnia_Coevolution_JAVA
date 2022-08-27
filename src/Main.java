@@ -32,7 +32,7 @@ public class Main {
 
         //"different modes are: linear, static, sinus, step, random"
 
-        Experiment exp1 = new Experiment("scar0_0", 100, 0.0, 1000, 1000,
+        Experiment exp1 = new Experiment("scar0_0", 10, 0.0, 1000, 1000,
                 2000, 0.01, 0.01, 0.0, 0.0, 1.0, 1.0,
                 "scarcity", "static", modeArgs);
 

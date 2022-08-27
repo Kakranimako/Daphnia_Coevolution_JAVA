@@ -201,12 +201,14 @@ public class Simulation {
         colHeadersData.add("daphInts");
         colHeadersData.add("symbSlopes");
         colHeadersData.add("symbInts");
-        
+
+        bigdata.getColumns().get("generations").get(genNum).add(genNum);
+
         for (String columnname : colHeadersParams) {
             
             HashMap<Double, ArrayList<Double>> column = bigdata.getColumns().get(columnname);
             column.get(genNum).add(varis.get(columnname));
-            bigdata.getColumns().get("generations").get(genNum).add(genNum);
+
         }
 
         for (String columnname2 : colHeadersData) {
@@ -554,9 +556,18 @@ public class Simulation {
         return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void toTXT (Collected_data bigdata, MeanData meanie, String filename) throws IOException {
+    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String filename) throws IOException {
 
         FileWriter file = new FileWriter(filename +".csv");
+
+        file.write(filename + "," + "\n"+
+                "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + "\n" +
+                   "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + "\n" +
+                   "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
+                   "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
+                 "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
+                "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
+
         file.write("Generation" + "," + "scarcity" + "," + "vir_parD" + "," + "vir_parS" + ","
                 + "daphSlopes" + "," +  "dSlopesStD" + "," + "daphInts" + "," + "dIntsStd" + "," +
                 "symbSlopes" + "," + "sSlopesStD" + "," + "symbInts" + "," + "sIntsStD" + "\n");
