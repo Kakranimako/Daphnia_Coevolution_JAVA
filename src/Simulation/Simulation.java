@@ -78,12 +78,14 @@ public class Simulation {
 
     public Populations initialisation(Populations allPops, HashMap<String, Double> variables){
 
-        HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("symbPopSize"));
+        HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("initMeanGene1"),
+                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("symbPopSize"));
         allPops.setSymbiontPop(symbiontPop);
 
 
 
-        HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("daphPopSize"));
+        HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("initMeanGene1"),
+                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
 
 
@@ -561,11 +563,13 @@ public class Simulation {
         FileWriter file = new FileWriter(filename +".csv");
 
         file.write(filename + "," + "\n"+
-                "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + "\n" +
-                   "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + "\n" +
-                   "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
-                   "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
-                 "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
+                "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
+                "Init_meanG1" + "," + varis.get("initMeanGene1") + ",," + "Init_meanG2" + "," + varis.get("initMeanGene2") + ",," +
+                "Init_StD" + "," + varis.get("initVariance")+ "\n" +
+                "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + "\n" +
+                "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
+                "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
+                "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
                 "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
 
         file.write("Generation" + "," + "scarcity" + "," + "vir_parD" + "," + "vir_parS" + ","

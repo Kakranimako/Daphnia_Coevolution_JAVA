@@ -11,24 +11,24 @@ import java.util.Random;
 
 public class OrganismFactory {
 
-    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double size){
+    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
         HashMap<String, Daphnia> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
-            double gene1 = new Random().nextGaussian(0,0.5);
-            double gene2 = new Random().nextGaussian(0.5,0.5);
+            double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
+            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance);
             double fitness = 1;
             Daphnia daphnia = new Daphnia(name, gene1, gene2, fitness);
             org_pop.put(name, daphnia);
         }
         return org_pop;
     }
-    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double size){
+    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
         HashMap<String, Symbiont> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
-            double gene1 = new Random().nextGaussian(0, 0.5);
-            double gene2 = new Random().nextGaussian(0.5, 0.5);
+            double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
+            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance);
             double fitness = 1;
             Symbiont symbiont = new Symbiont(name, gene1, gene2, fitness);
             org_pop.put(name, symbiont);
