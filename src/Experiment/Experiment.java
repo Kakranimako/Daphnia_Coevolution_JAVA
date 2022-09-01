@@ -32,11 +32,13 @@ public class Experiment {
     private ArrayList<Double> datapoints;
     private int runs;
 
+    private double varParValue;
+
 
 
     public Experiment (String expName, int runs, double initMeanGene1, double initMeanGene2, double initVariance, double scarcity, double num_of_gens, double daphPopSize,
                        double symbPopSize, double mut_chance, double mutStepSize, double vir_parD,
-                       double vir_parS, double fitPen, double fitPenSymb, String variablePar, String mode,
+                       double vir_parS, double fitPen, double fitPenSymb, String variablePar, double varParValue, String mode,
                        HashMap<String, Double> modeArgs) {
 
         Variables dummyVars = new Variables( new HashMap<>());
@@ -55,6 +57,8 @@ public class Experiment {
         dummyVars.getVarDict().put("initMeanGene1", initMeanGene1);
         dummyVars.getVarDict().put("initMeanGene2", initMeanGene2);
         dummyVars.getVarDict().put("initVariance",initVariance);
+
+        dummyVars.getVarDict().put(variablePar, varParValue);
 
 
 
@@ -116,6 +120,7 @@ public class Experiment {
         this.mode = mode;
         this.modeArgs = modeArgs;
         this.expName = expName;
+        this.varParValue = varParValue;
 
 
 
@@ -123,7 +128,7 @@ public class Experiment {
 
     public int startExp() {
 
-
+        System.out.println("started now " + expName);
 
         for (int runNum = 0; runNum < runs; runNum++) {
 
@@ -134,7 +139,7 @@ public class Experiment {
 
         MeanData maeniee = new MeanData().calcMeansVariance(bigData);
         try {
-            new Simulation().toTXT(bigData, maeniee, varDict, mode, expName);
+            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar, varParValue, expName);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

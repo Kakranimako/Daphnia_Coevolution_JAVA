@@ -558,7 +558,7 @@ public class Simulation {
         return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String filename) throws IOException {
+    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String filename) throws IOException {
 
         FileWriter file = new FileWriter(filename +".csv");
 
@@ -566,7 +566,8 @@ public class Simulation {
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
                 "Init_meanG1" + "," + varis.get("initMeanGene1") + ",," + "Init_meanG2" + "," + varis.get("initMeanGene2") + ",," +
                 "Init_StD" + "," + varis.get("initVariance")+ "\n" +
-                "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + "\n" +
+                "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
+                "variableParam" + "," + variablePar + ",," + "varParValue" + "," + varParvalue + ",," +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
                 "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
                 "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
