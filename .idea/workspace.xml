@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java: multiprocessing done">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java: multiprocessing done (2)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Daphnia_Coevolution_JAVA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Daphnia_Coevolution_JAVA.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/Daphnia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Daphnia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/Organism.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Organism.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/Symbiont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Symbiont.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Populations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Populations.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testing/SimulationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testing/SimulationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testrun.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testrun2.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,22 +45,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "true",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/nimak/Desktop/Daphnia_Coevolution_JAVA",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "advanced.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/nimak/Desktop/Daphnia_Coevolution_JAVA&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/openjdk-18.0.2.1" />
@@ -242,7 +248,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661969089363</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="altversion in java: multiprocessing done (2)">
+      <created>1662073381034</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1662073381034</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -269,25 +282,26 @@
     <MESSAGE value="altversion in java:experiment class created. Done (1)" />
     <MESSAGE value="altversion in java:experiment class created. Done: static experiments possible" />
     <MESSAGE value="altversion in java: multiprocessing done" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java: multiprocessing done" />
+    <MESSAGE value="altversion in java: multiprocessing done (2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java: multiprocessing done (2)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>565</line>
+          <line>365</line>
           <option name="timeStamp" value="72" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Experiment/Experiment.java</url>
-          <line>132</line>
-          <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Testing/SimulationTest.java</url>
           <line>33</line>
           <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
+          <line>124</line>
+          <option name="timeStamp" value="82" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

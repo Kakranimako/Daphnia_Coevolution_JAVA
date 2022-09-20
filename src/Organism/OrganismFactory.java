@@ -11,51 +11,50 @@ import java.util.Random;
 
 public class OrganismFactory {
 
-    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
+    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double initMeanGene3, double size){
         HashMap<String, Daphnia> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
             double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
-            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance);
+            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance*0.1);
+            double gene3 = new Random().nextGaussian(initMeanGene3, initVariance*0.1); //change
             double fitness = 1;
-            Daphnia daphnia = new Daphnia(name, gene1, gene2, fitness);
+            Daphnia daphnia = new Daphnia(name, gene1, gene2, gene3, fitness);
             org_pop.put(name, daphnia);
         }
         return org_pop;
     }
-    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
+    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double initMeanGene3, double size){
         HashMap<String, Symbiont> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
             double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
-            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance);
+            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance*0.1); //change
+            double gene3 = new Random().nextGaussian(initMeanGene3, initVariance*0.1);
             double fitness = 1;
-            Symbiont symbiont = new Symbiont(name, gene1, gene2, fitness);
+            Symbiont symbiont = new Symbiont(name, gene1, gene2, gene3, fitness);
             org_pop.put(name, symbiont);
         }
         return org_pop;
     }
 
-    public  HashMap<String, Symbiont> CreateNewIndvsSymbiont(String orgname, HashMap<String, Symbiont> Symbiontpop, HashMap<String, Double> varis, double start, double size, ArrayList<String> parentList){
+    public  HashMap<String, Symbiont> CreateNewIndvsSymbiont(String orgname, HashMap<String, Symbiont> Symbiontpop, HashMap<String, Double> varis, double size, ArrayList<String> parentList){
 
         HashMap<String, Symbiont> org_pop = new HashMap<>();
         Collections.shuffle(parentList);
 
-        // probleem if (Symbiontpop.equals())
-        while (start <= size) {
-            String name = orgname + "_" + start;
+
+       for (int i = 1; i < size+1; i++) {
+            String name = orgname + "_" + i;
 
             Symbiont parent = Symbiontpop.get(parentList.get(0));
             double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"));
-            double gene2 = new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), varis.get("mutStepSize"));
+            double gene2 = new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), 0.1*varis.get("mutStepSize"));
+            double gene3 = new Simulation().newGene(parent.getGene3(), varis.get("mut_chance"), 0.1*varis.get("mutStepSize"));//change
             double fitness = 1;
 
-            String ouder = parent.getName();
-            String host = parent.getpartner();
-
-            Symbiont newsymbiont = new Symbiont(name, gene1, gene2, fitness, ouder, host);
+            Symbiont newsymbiont = new Symbiont(name, gene1, gene2, gene3, fitness);
             org_pop.put(newsymbiont.getName(), newsymbiont);
-            start = start + 1;
             parentList.remove(0);
         }
         return org_pop;
@@ -64,22 +63,19 @@ public class OrganismFactory {
     public HashMap<String, Daphnia> CreateNewIndvsDaphnia(String orgname, HashMap<String, Daphnia> Daphniapop, HashMap<String, Double> varis, double size, ArrayList<String> parentList) {
         Collections.shuffle(parentList);
         HashMap<String, Daphnia> org_pop = new HashMap<>();
-        int i = 0;
-        while (i < size) {
-            int nameNum = i+1;
-            String name = orgname + "_" + nameNum;
 
-            Daphnia parent = Daphniapop.get(parentList.get(i));
+        for (int i = 1; i < size + 1; i++ ) {
+
+            String name = orgname + "_" + i;
+
+            Daphnia parent = Daphniapop.get(parentList.get(i-1));
             double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"));
-            double gene2 = new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), varis.get("mutStepSize"));
+            double gene2 = new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), 0.1*varis.get("mutStepSize")); //change
+            double gene3 = new Simulation().newGene(parent.getGene3(), varis.get("mut_chance"), 0.1*varis.get("mutStepSize"));//change
             double fitness = 1;
-            String ouder = parent.getName();
-            String symb = parent.getpartner();
 
-            Daphnia daphnia = new Daphnia(name, gene1, gene2, fitness, ouder, symb);
+            Daphnia daphnia = new Daphnia(name, gene1, gene2, gene3, fitness);
             org_pop.put(daphnia.getName(), daphnia);
-
-            i += 1;
 
         }
 

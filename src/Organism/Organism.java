@@ -6,43 +6,39 @@ public class Organism {
     private String name;
     private double gene1;
     private double gene2;
+    private double gene3;
     private double fitness;
-    private String ouder;
 
 
 
-    public Organism(String name, double gene1, double gene2, double fitness) {
+    public Organism(String name, double gene1, double gene2, double gene3, double fitness) {
         this.name = name;
         this.gene1 = gene1;
         this.gene2 = gene2;
+        this.gene3 = gene3;
         this.fitness = fitness;
     }
-    public Organism(String name, double gene1, double gene2, double fitness, String ouder) {
-        this(name, gene1, gene2, fitness);
-        this.ouder = ouder;
+
+
+    public double getGene3() {
+        return gene3;
     }
 
-    public Organism(String name, double gene1, double gene2, double fitness, String ouder, String partner) {
-        this(name, gene1, gene2, fitness, ouder);
-        this.partner = partner;
+    public void setGene3(double gene3) {
+        this.gene3 = gene3;
     }
-
-
-
 
     @Override
     public String toString() {
         return "Organism{" +
+                "partner='" + partner + '\'' +
                 ", name='" + name + '\'' +
                 ", gene1=" + gene1 +
                 ", gene2=" + gene2 +
+                ", gene3=" + gene3 +
                 ", fitness=" + fitness +
-                ", ouder='" + ouder + '\'' +
-                ", partner='" + partner + '\'' +
                 '}';
     }
-
-
 
     public String getpartner() {
         return partner;
@@ -84,12 +80,5 @@ public class Organism {
         this.fitness = fitness;
     }
 
-    public String getOuder() {
-        return ouder;
-    }
-
-    public void setOuder(String ouder) {
-        this.ouder = ouder;
-    }
 
 }
