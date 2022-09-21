@@ -17,7 +17,7 @@ public class OrganismFactory {
             String name = orgname + "_" + i;
             double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
             double gene2 = new Random().nextGaussian(initMeanGene2, initVariance*0.1);
-            double gene3 = new Random().nextGaussian(initMeanGene3, initVariance*0.1); //change
+            double gene3 = Math.abs(new Random().nextGaussian(initMeanGene3, initVariance*0.1)); //change
             double fitness = 1;
             Daphnia daphnia = new Daphnia(name, gene1, gene2, gene3, fitness);
             org_pop.put(name, daphnia);
@@ -44,8 +44,8 @@ public class OrganismFactory {
         Collections.shuffle(parentList);
 
 
-       for (int i = 1; i < size+1; i++) {
-            String name = orgname + "_" + i;
+       for (int i = 0; i < size; i++) {
+            String name = orgname + "_" + i+1;
 
             Symbiont parent = Symbiontpop.get(parentList.get(0));
             double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"));

@@ -15,10 +15,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String expName = "testVir_parS(2)_";
-        int runs = 75;
-        double initMeanGene1 = 0;
+        String expName = "test_horizontal_";
+        int runs = 10;
+        double initMeanGene1 = 5;
         double initMeanGene2 = 0;
+        double initMeanGene3 = 0;
         double initVariance = 0.5;
         double scarcity = 0.5;
         double num_of_gens = 1500;
@@ -30,89 +31,30 @@ public class Main {
         double vir_parS = 0.2;
         double fitPen = 1;
         double fitPenSymb = 0.95;
-        String variablePar = "vir_parD";
-        String mode = "static";
+        String variablePar = "scarcity";
+        String mode = "sinus";
 
 
 
         //"different modes are: linear, static, sinus, step, random"
         long start = System.currentTimeMillis();
-        Experiment exp1 = new Experiment(expName + "0_0", runs, initMeanGene1, initMeanGene2, initVariance,
+        Experiment exp1 = new Experiment(expName + "0_0", runs, initMeanGene1, initMeanGene2, initMeanGene3, initVariance,
                 scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.0,
+                variablePar, 0.5, variablePar, 0.4,
                 mode, ModeArgs.getModeArgs(-0.00075, 0.2, 1.0, 2.0, 1.0, 0.4, 1.0));
 
         System.out.println("done");
 
-        Experiment exp12 = new Experiment(expName + "0_1", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.05,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
 
 
-        Experiment exp2 = new Experiment(expName + "0_2", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.1,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
+        exp1.startExp();
 
 
-        Experiment exp3 = new Experiment(expName + "0_3", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.12,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-
-        Experiment exp4 = new Experiment(expName + "0_4", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.15,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-
-        Experiment exp5 = new Experiment(expName + "0_5", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.2,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-
-        Experiment exp6 = new Experiment(expName + "0_6", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.25,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-        Experiment exp7 = new Experiment(expName + "0_8", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.3,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-        Experiment exp8 = new Experiment(expName + "1_0", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.35,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-        Experiment exp9 = new Experiment(expName + "1_2", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.37,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-        Experiment exp10 = new Experiment(expName + "1_5", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.4,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-        Experiment exp11 = new Experiment(expName + "2_0", runs, initMeanGene1, initMeanGene2, initVariance,
-                scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize,
-                vir_parD, vir_parS, fitPen, fitPenSymb, variablePar, 0.45,
-                mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
-
-
-        //exp1.startExp();
-
-
-       ArrayList<Experiment> expList = new ArrayList<>(Arrays.asList(exp1, exp2, exp3, exp4, exp5, exp6, exp7, exp8, exp9, exp10, exp11, exp12));
+       //ArrayList<Experiment> expList = new ArrayList<>(Arrays.asList(exp1, exp2, exp3, exp4, exp5, exp6, exp7, exp8, exp9, exp10, exp11, exp12));
 
 
 
-       expList.parallelStream().forEach(experiment -> experiment.startExp());
+       //expList.parallelStream().forEach(experiment -> experiment.startExp());
        long stop = System.currentTimeMillis();
 
        System.out.println("parrelisme " +  String.valueOf(stop-start));

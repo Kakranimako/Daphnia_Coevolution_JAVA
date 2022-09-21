@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java: multiprocessing done (2)">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java: switch to horizontal transfer of symbionts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/Daphnia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Daphnia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/Organism.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Organism.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Organism/Symbiont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/Symbiont.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Populations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Populations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/MeanData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/MeanData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Testing/SimulationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testing/SimulationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testrun.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testrun2.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662073381034</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="altversion in java: switch to horizontal transfer of symbionts">
+      <created>1663635499819</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1663635499819</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -283,25 +285,21 @@
     <MESSAGE value="altversion in java:experiment class created. Done: static experiments possible" />
     <MESSAGE value="altversion in java: multiprocessing done" />
     <MESSAGE value="altversion in java: multiprocessing done (2)" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java: multiprocessing done (2)" />
+    <MESSAGE value="altversion in java: switch to horizontal transfer of symbionts" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java: switch to horizontal transfer of symbionts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>365</line>
+          <line>374</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Testing/SimulationTest.java</url>
           <line>33</line>
           <option name="timeStamp" value="78" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>124</line>
-          <option name="timeStamp" value="82" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

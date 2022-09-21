@@ -14,7 +14,7 @@ public class Simulation {
 
     
 
-    public Collected_data simulator (HashMap<String, Double> variables, Collected_data bigdata, ArrayList<Double> datapoints, String variablePar, String mode, HashMap<String, Double> modeArgs){
+    public Collected_data simulator (HashMap<String, Double> variables, Collected_data bigdata, ArrayList<Double> datapoints, String variablePar1, String variablePar2, String mode, HashMap<String, Double> modeArgs){
 
         HashMap<String, Daphnia> daphniaPop = new HashMap<>();
 
@@ -28,13 +28,13 @@ public class Simulation {
         ArrayList<Double> varList = new ArrayList<>();
 
         if (mode.equals("sinus")) {
-             varList = sinusfunc(variables, variables.get(variablePar), modeArgs.get("horizonShift"), modeArgs.get("period"));
+             varList = sinusfunc(variables, variables.get(variablePar1), modeArgs.get("horizonShift"), modeArgs.get("period"));
         }
         else if (mode.equals("linear")) {
             varList = linear(variables, modeArgs.get("slope"), modeArgs.get("vertShift"));
         }
         else if (mode.equals("step")) {
-            varList = stepfunc(variables, variables.get(variablePar), modeArgs.get("phases"));
+            varList = stepfunc(variables, variables.get(variablePar1), modeArgs.get("phases"));
         }
         else if (mode.equals("random")) {
             varList = stochasticfunc(variables, modeArgs.get("mean"), modeArgs.get("variance"));
@@ -42,7 +42,7 @@ public class Simulation {
 
 
         if (!mode.equals("static")) {
-            variables.put(variablePar, varList.get(0));
+            variables.put(variablePar1, varList.get(0));
         }
 
         allPops = initialisation(allPops, variables);
@@ -51,17 +51,18 @@ public class Simulation {
         for (double genNum = 1.0; genNum < variables.get("num_of_gens")+1; genNum++) {
 
            if (!mode.equals("static")) {
-               variables.put(variablePar, varList.get((int) genNum));
+               variables.put(variablePar1, varList.get((int) genNum));
            }
 
             allPops = interaction(allPops, variables);
 
-            allPops = reprod(allPops, variables);
-
-
             if (datapoints.contains(genNum)) {
                 bigdata = dataCollected(allPops, bigdata, variables, genNum);
             }
+            allPops = reprod(allPops, variables);
+
+
+
         }
         
         return bigdata;
@@ -76,11 +77,11 @@ public class Simulation {
     public Populations initialisation(Populations allPops, HashMap<String, Double> variables){
 
         HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("initMeanGene1"),
-                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("initMeanGene1"), variables.get("symbPopSize"));
+                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("initMeanGene3"), variables.get("symbPopSize"));
         allPops.setSymbiontPop(symbiontPop);
 
         HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("initMeanGene1"),
-                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("initMeanGene1"), variables.get("daphPopSize"));
+                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("initMeanGene3"), variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
 
         return allPops;
@@ -133,51 +134,58 @@ public class Simulation {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Collected_data dataCollected (Populations allPops, Collected_data bigdata, HashMap<String, Double> varis, double genNum) {
 
-        double daphSlopesAvg = 0;
-        double daphIntsAvg = 0;
-        double symbSlopesAvg = 0;
-        double symbIntsAvg = 0;
+        double susceptChanceAvg = 0;
+        double attachChanceAvg = 0;
+        double hostAdvAvg = 0;
+        double symbAdvAvg = 0;
+        double fitAvgDaph = 0;
+        double fitAvgSymb = 0;
 
         for (Symbiont symb: allPops.getSymbiontPop().values()) {
-            symbSlopesAvg += symb.getGene1();
-            symbIntsAvg += symb.getGene2();
+            attachChanceAvg += 1 / (1 + Math.exp(symb.getGene1() * 0.5 - symb.getGene2())); //HARDCODE
+            symbAdvAvg += symb.getGene3();
+            fitAvgSymb += symb.getFitness();
         }
-        symbSlopesAvg = symbSlopesAvg/allPops.getSymbiontPop().size();
-        symbIntsAvg = symbIntsAvg/allPops.getSymbiontPop().size();
+        attachChanceAvg = attachChanceAvg/allPops.getSymbiontPop().size();
+        symbAdvAvg = symbAdvAvg/allPops.getSymbiontPop().size();
+        fitAvgSymb = fitAvgSymb/allPops.getSymbiontPop().size();
 
         for (Daphnia daph: allPops.getDaphniaPop().values()) {
-            daphSlopesAvg += daph.getGene1();
-            daphIntsAvg += daph.getGene2();
+            susceptChanceAvg += 1 / (1 + Math.exp(daph.getGene1() * 0.5 - daph.getGene2())); //HARDCODE
+            hostAdvAvg += daph.getGene3();
+            fitAvgDaph += daph.getFitness();
         }
-        daphSlopesAvg = daphSlopesAvg/allPops.getDaphniaPop().size();
-        daphIntsAvg = daphIntsAvg/allPops.getDaphniaPop().size();
+        susceptChanceAvg = susceptChanceAvg/allPops.getDaphniaPop().size();
+        hostAdvAvg = hostAdvAvg/allPops.getDaphniaPop().size();
+        fitAvgDaph = fitAvgDaph/allPops.getDaphniaPop().size();
 
         HashMap<String, Double> avgDataDict = new HashMap<>();
-        avgDataDict.put("daphSlopes", daphSlopesAvg);
-        avgDataDict.put("daphInts", daphIntsAvg);
-        avgDataDict.put("symbSlopes", symbSlopesAvg);
-        avgDataDict.put("symbInts", symbIntsAvg);
+        avgDataDict.put("susceptChance", susceptChanceAvg);
+        avgDataDict.put("attachChance", attachChanceAvg);
+        avgDataDict.put("hostAdv", hostAdvAvg);
+        avgDataDict.put("symbAdv", symbAdvAvg);
+        avgDataDict.put("fitDaph", fitAvgDaph);
+        avgDataDict.put("fitSymb", fitAvgSymb);
 
 
-    
+
         ArrayList<String> colHeadersParams = new ArrayList<>();
         colHeadersParams.add("scarcity");
-        colHeadersParams.add("vir_parD");
-        colHeadersParams.add("vir_parS");
-        colHeadersParams.add("fitPen");
         colHeadersParams.add("mutStepSize");
         colHeadersParams.add("mut_chance");
 
         ArrayList<String> colHeadersData = new ArrayList<>();
-        colHeadersData.add("daphSlopes");
-        colHeadersData.add("daphInts");
-        colHeadersData.add("symbSlopes");
-        colHeadersData.add("symbInts");
+        colHeadersData.add("susceptChance");
+        colHeadersData.add("attachChance");
+        colHeadersData.add("hostAdv");
+        colHeadersData.add("symbAdv");
+        colHeadersData.add("fitDaph");
+        colHeadersData.add("fitSymb");
 
         bigdata.getColumns().get("generations").get(genNum).add(genNum);
 
         for (String columnname : colHeadersParams) {
-            
+
             HashMap<Double, ArrayList<Double>> column = bigdata.getColumns().get(columnname);
             column.get(genNum).add(varis.get(columnname));
 
@@ -191,17 +199,17 @@ public class Simulation {
 
 
 
-        
+
         return bigdata;
-                
+
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    
-    
-    
-    
+
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HashMap<String, Daphnia> reprodDaph(Populations allPops, HashMap<String, Double> varis) {
 
@@ -219,7 +227,7 @@ public class Simulation {
     public HashMap<String, Symbiont> reprodSymb(Populations allPops, HashMap<String, Double> varis){
 
 
-        double size = varis.get("symbPopSize") + 1;
+        double size = varis.get("symbPopSize");
 
 
         Parentpicker picksList = new Parentpicker();
@@ -296,7 +304,7 @@ public class Simulation {
             parentList.add(picksList.getParentCumulList().get(targIndex));
             i = i+1;
         }
-        
+
         picksList.setParentList(parentList);
 
 
@@ -331,7 +339,7 @@ public class Simulation {
 
         double c = new Random().nextDouble(0, 1);
 
-        double p = 1 / (1 + Math.exp(symb.getGene1() * 0.5 - symb.getGene2()));
+        double p = 1 / (1 + Math.exp(symb.getGene1() * 0.5 - symb.getGene2())); //HARDCODE
 
         boolean decision;
         decision = c < p;
@@ -345,7 +353,7 @@ public class Simulation {
 
         double c = new Random().nextDouble(0, 1);
 
-        double p = 1 / (1 + Math.exp(daph.getGene1() * 0.5 - daph.getGene2()));
+        double p = 1 / (1 + Math.exp(daph.getGene1() * 0.5 - daph.getGene2())); //HARDCODE
 
         boolean decision;
         decision = c < p;
@@ -358,7 +366,8 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String filename) throws IOException {
+    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar1,
+                       Double varParValue1, String variablePar2, Double varParValue2, String filename) throws IOException {
 
         FileWriter file = new FileWriter(filename +".csv");
 
@@ -367,30 +376,33 @@ public class Simulation {
                 "Init_meanG1" + "," + varis.get("initMeanGene1") + ",," + "Init_meanG2" + "," + varis.get("initMeanGene2") + ",," +
                 "Init_StD" + "," + varis.get("initVariance")+ "\n" +
                 "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
-                "variableParam" + "," + variablePar + ",," + "varParValue" + "," + varParvalue + ",," +"\n" +
+                "variableParam1" + "," + variablePar1 + ",," + "varParValue1" + "," + varParValue1 + ",," +
+                "variableParam2" + "," + variablePar2 + ",," + "varParValue1" + "," + varParValue1 +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
                 "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
-                "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
-                "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
+                "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n\n");
 
-        file.write("Generation" + "," + "scarcity" + "," + "vir_parD" + "," + "vir_parS" + ","
-                + "daphSlopes" + "," +  "dSlopesStD" + "," + "daphInts" + "," + "dIntsStd" + "," +
-                "symbSlopes" + "," + "sSlopesStD" + "," + "symbInts" + "," + "sIntsStD" + "\n");
+        file.write("Generation" + "," + "scarcity" + "," + "suscept %" + "," + "attach %" + ","
+                + "host Adv" + "," +  "symb factor" + "," + "fitDaph" + "," + "fitSymb" + "," +
+                "susceptErr" + "," + "attachErr" + "," + "hostAdvErr" + "," + "symbFactorErr" + "," +
+                 "fitDaphErr" + "," + "fitSymbErr" + "\n");
 
         for (double datapoint: bigdata.getColumns().get("generations").keySet()) {
 
             String dataline = String.valueOf(bigdata.getColumns().get("generations").get(datapoint).get(0)) + "," +
                     String.valueOf(bigdata.getColumns().get("scarcity").get(datapoint).get(0)) + "," +
-                    String.valueOf(bigdata.getColumns().get("vir_parD").get(datapoint).get(0)) + "," +
-                    String.valueOf(bigdata.getColumns().get("vir_parS").get(datapoint).get(0)) + "," +
-                    String.valueOf(meanie.getMeanDaphSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanDaphInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanSymbSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceSymbSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanSymbInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint));
+                    String.valueOf(meanie.getMeansusceptChance().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanattachChance().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanhostAdv().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeansymbAdv().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanfitDaph().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanfitSymb().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVariancesusceptChance().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVarianceattachChance().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVariancehostAdv().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVariancesymbAdv().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVariancefitDaph().get(datapoint)) + "," +
+                    String.valueOf(meanie.getVariancefitSymb().get(datapoint));
 
             file.write(dataline + "\n");
         }

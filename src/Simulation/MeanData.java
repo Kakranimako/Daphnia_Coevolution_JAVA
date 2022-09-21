@@ -5,75 +5,113 @@ import java.util.HashMap;
 
 public class MeanData {
 
-    private HashMap<Double, Double> meanDaphSlopes;
+    private HashMap<Double, Double> meansusceptChance;
     
-    private HashMap<Double, Double> meanDaphInts;
+    private HashMap<Double, Double> meanhostAdv;
     
-    private HashMap<Double, Double> meanSymbSlopes;
+    private HashMap<Double, Double> meanattachChance;
     
-    private HashMap<Double, Double> meanSymbInts;
+    private HashMap<Double, Double> meansymbAdv;
 
-    private HashMap<Double, Double> varianceDaphSlopes;
+    private HashMap<Double, Double> variancesusceptChance;
 
-    private HashMap<Double, Double> varianceDaphInts;
+    private HashMap<Double, Double> variancehostAdv;
 
-    private HashMap<Double, Double> varianceSymbSlopes;
+    private HashMap<Double, Double> varianceattachChance;
 
-    private HashMap<Double, Double> varianceSymbInts;
+    private HashMap<Double, Double> variancesymbAdv;
+
+    private HashMap<Double, Double> meanfitDaph;
+
+    private HashMap<Double, Double> meanfitSymb;
+    private HashMap<Double, Double> variancefitDaph;
+    private HashMap<Double, Double> variancefitSymb;
+
+
     public MeanData() {
 
     }
-    public MeanData(HashMap<Double, Double> meanDaphSlopes, HashMap<Double, Double> meanDaphInts, HashMap<Double, Double> meanSymbSlopes, HashMap<Double, Double> meanSymbInts, HashMap<Double, Double> varianceDaphSlopes, HashMap<Double, Double> varianceDaphInts, HashMap<Double, Double> varianceSymbSlopes, HashMap<Double, Double> varianceSymbInts) {
-        this.meanDaphSlopes = meanDaphSlopes;
-        this.meanDaphInts = meanDaphInts;
-        this.meanSymbSlopes = meanSymbSlopes;
-        this.meanSymbInts = meanSymbInts;
-        this.varianceDaphSlopes = varianceDaphSlopes;
-        this.varianceDaphInts = varianceDaphInts;
-        this.varianceSymbSlopes = varianceSymbSlopes;
-        this.varianceSymbInts = varianceSymbInts;
+    public MeanData(HashMap<Double, Double> meansusceptChance, HashMap<Double, Double> meanhostAdv, HashMap<Double,
+            Double> meanattachChance, HashMap<Double, Double> meansymbAdv, HashMap<Double, Double> variancesusceptChance,
+                    HashMap<Double, Double> variancehostAdv, HashMap<Double, Double> varianceattachChance,
+                    HashMap<Double, Double> variancesymbAdv,
+                    HashMap<Double, Double> meanfitSymb, HashMap<Double, Double> variancefitSymb,
+                    HashMap<Double, Double> meanfitDaph, HashMap<Double, Double> variancefitDaph) {
+
+        this.meansusceptChance = meansusceptChance;
+        this.meanhostAdv = meanhostAdv;
+        this.meanattachChance = meanattachChance;
+        this.meansymbAdv = meansymbAdv;
+        this.variancesusceptChance = variancesusceptChance;
+        this.variancehostAdv = variancehostAdv;
+        this.varianceattachChance = varianceattachChance;
+        this.variancesymbAdv = variancesymbAdv;
+        this.meanfitDaph = meanfitDaph;
+        this.meanfitSymb = meanfitSymb;
+        this.variancefitDaph = variancefitDaph;
+        this.variancefitSymb = variancefitSymb;
+
+
     }
 
     public MeanData calcMeansVariance (Collected_data bigdata) {
 
-        HashMap<Double, Double> meanDaphSlopes = new HashMap<>();
-        HashMap<Double, Double> meanDaphInts = new HashMap<>();
-        HashMap<Double, Double> meanSymbSlopes = new HashMap<>();
-        HashMap<Double, Double> meanSymbInts = new HashMap<>();
-        HashMap<Double, Double> varianceDaphSlopes = new HashMap<>();
-        HashMap<Double, Double> varianceDaphInts = new HashMap<>();
-        HashMap<Double, Double> varianceSymbSlopes = new HashMap<>();
-        HashMap<Double, Double> varianceSymbInts = new HashMap<>();
+        HashMap<Double, Double> meansusceptChance = new HashMap<>();
+        HashMap<Double, Double> meanhostAdv = new HashMap<>();
+        HashMap<Double, Double> meanattachChance = new HashMap<>();
+        HashMap<Double, Double> meansymbAdv = new HashMap<>();
+        HashMap<Double, Double> variancesusceptChance = new HashMap<>();
+        HashMap<Double, Double> variancehostAdv = new HashMap<>();
+        HashMap<Double, Double> varianceattachChance = new HashMap<>();
+        HashMap<Double, Double> variancesymbAdv = new HashMap<>();
+
+        HashMap<Double, Double> meanfitSymb = new HashMap<>();
+        HashMap<Double, Double> variancefitSymb = new HashMap<>();
+        HashMap<Double, Double> meanfitDaph = new HashMap<>();
+        HashMap<Double, Double> variancefitDaph = new HashMap<>();
+
+        
 
         for (double datapoint : bigdata.getColumns().get("generations").keySet()) {
 
-            double meanDaph = calcAvg(bigdata.getColumns().get("daphSlopes").get(datapoint));
-            meanDaphSlopes.put(datapoint, meanDaph);
+            double meanDaph = calcAvg(bigdata.getColumns().get("susceptChance").get(datapoint));
+            meansusceptChance.put(datapoint, meanDaph);
 
-            varianceDaphSlopes.put(datapoint, calcVariance(bigdata.getColumns().get("daphSlopes").get(datapoint), meanDaph));
+            variancesusceptChance.put(datapoint, calcVariance(bigdata.getColumns().get("susceptChance").get(datapoint), meanDaph));
 
-            double DaphInts = calcAvg(bigdata.getColumns().get("daphInts").get(datapoint));
-            meanDaphInts.put(datapoint, DaphInts);
+            double hostAdv = calcAvg(bigdata.getColumns().get("hostAdv").get(datapoint));
+            meanhostAdv.put(datapoint, hostAdv);
 
-            varianceDaphInts.put(datapoint, calcVariance(bigdata.getColumns().get("daphInts").get(datapoint), DaphInts));
+            variancehostAdv.put(datapoint, calcVariance(bigdata.getColumns().get("hostAdv").get(datapoint), hostAdv));
 
 
-            double meansymb = calcAvg(bigdata.getColumns().get("symbSlopes").get(datapoint));
-            meanSymbSlopes.put(datapoint, meansymb);
+            double meansymb = calcAvg(bigdata.getColumns().get("attachChance").get(datapoint));
+            meanattachChance.put(datapoint, meansymb);
 
-            varianceSymbSlopes.put(datapoint, calcVariance(bigdata.getColumns().get("symbSlopes").get(datapoint), meansymb));
+            varianceattachChance.put(datapoint, calcVariance(bigdata.getColumns().get("attachChance").get(datapoint), meansymb));
 
-            double symbInts = calcAvg(bigdata.getColumns().get("symbInts").get(datapoint));
-            meanSymbInts.put(datapoint, symbInts);
+            double symbAdv = calcAvg(bigdata.getColumns().get("symbAdv").get(datapoint));
+            meansymbAdv.put(datapoint, symbAdv);
 
-            varianceSymbInts.put(datapoint, calcVariance(bigdata.getColumns().get("symbInts").get(datapoint), symbInts));
+            variancesymbAdv.put(datapoint, calcVariance(bigdata.getColumns().get("symbAdv").get(datapoint), symbAdv));
+
+            double meanFitSymb = calcAvg(bigdata.getColumns().get("fitSymb").get(datapoint));
+            meanfitSymb.put(datapoint, meanFitSymb);
+
+            variancefitSymb.put(datapoint, calcVariance(bigdata.getColumns().get("fitSymb").get(datapoint), meanFitSymb));
+
+            double fitDaph = calcAvg(bigdata.getColumns().get("fitDaph").get(datapoint));
+            meanfitDaph.put(datapoint, fitDaph);
+
+            variancefitDaph.put(datapoint, calcVariance(bigdata.getColumns().get("fitDaph").get(datapoint), fitDaph));
 
 
         }
 
 
-        return new MeanData(meanDaphSlopes, meanDaphInts, meanSymbSlopes,
-                meanSymbInts, varianceDaphSlopes, varianceDaphInts, varianceSymbSlopes, varianceSymbInts);
+        return new MeanData(meansusceptChance, meanhostAdv, meanattachChance,
+                meansymbAdv, variancesusceptChance, variancehostAdv, varianceattachChance, variancesymbAdv, meanfitSymb,
+                variancefitSymb, meanfitDaph, variancefitDaph);
     }
 
     public Double calcAvg (ArrayList<Double> listy) {
@@ -96,81 +134,117 @@ public class MeanData {
         return Math.sqrt(variance / listy.size())/Math.sqrt(listy.size());
     }
 
-    public HashMap<Double, Double> getMeanDaphSlopes() {
-        return meanDaphSlopes;
+    public HashMap<Double, Double> getMeansusceptChance() {
+        return meansusceptChance;
     }
 
-    public void setMeanDaphSlopes(HashMap<Double, Double> meanDaphSlopes) {
-        this.meanDaphSlopes = meanDaphSlopes;
+    public void setMeansusceptChance(HashMap<Double, Double> meansusceptChance) {
+        this.meansusceptChance = meansusceptChance;
     }
 
-    public HashMap<Double, Double> getMeanDaphInts() {
-        return meanDaphInts;
+    public HashMap<Double, Double> getMeanhostAdv() {
+        return meanhostAdv;
     }
 
-    public void setMeanDaphInts(HashMap<Double, Double> meanDaphInts) {
-        this.meanDaphInts = meanDaphInts;
+    public void setMeanhostAdv(HashMap<Double, Double> meanhostAdv) {
+        this.meanhostAdv = meanhostAdv;
     }
 
-    public HashMap<Double, Double> getMeanSymbSlopes() {
-        return meanSymbSlopes;
+    public HashMap<Double, Double> getMeanattachChance() {
+        return meanattachChance;
     }
 
-    public void setMeanSymbSlopes(HashMap<Double, Double> meanSymbSlopes) {
-        this.meanSymbSlopes = meanSymbSlopes;
+    public void setMeanattachChance(HashMap<Double, Double> meanattachChance) {
+        this.meanattachChance = meanattachChance;
     }
 
-    public HashMap<Double, Double> getMeanSymbInts() {
-        return meanSymbInts;
+    public HashMap<Double, Double> getMeansymbAdv() {
+        return meansymbAdv;
     }
 
-    public void setMeanSymbInts(HashMap<Double, Double> meanSymbInts) {
-        this.meanSymbInts = meanSymbInts;
+    public void setMeansymbAdv(HashMap<Double, Double> meansymbAdv) {
+        this.meansymbAdv = meansymbAdv;
     }
 
-    public HashMap<Double, Double> getVarianceDaphSlopes() {
-        return varianceDaphSlopes;
+    public HashMap<Double, Double> getVariancesusceptChance() {
+        return variancesusceptChance;
     }
 
-    public void setVarianceDaphSlopes(HashMap<Double, Double> varianceDaphSlopes) {
-        this.varianceDaphSlopes = varianceDaphSlopes;
+    public void setVariancesusceptChance(HashMap<Double, Double> variancesusceptChance) {
+        this.variancesusceptChance = variancesusceptChance;
     }
 
-    public HashMap<Double, Double> getVarianceDaphInts() {
-        return varianceDaphInts;
+    public HashMap<Double, Double> getVariancehostAdv() {
+        return variancehostAdv;
     }
 
-    public void setVarianceDaphInts(HashMap<Double, Double> varianceDaphInts) {
-        this.varianceDaphInts = varianceDaphInts;
+    public void setVariancehostAdv(HashMap<Double, Double> variancehostAdv) {
+        this.variancehostAdv = variancehostAdv;
     }
 
-    public HashMap<Double, Double> getVarianceSymbSlopes() {
-        return varianceSymbSlopes;
+    public HashMap<Double, Double> getVarianceattachChance() {
+        return varianceattachChance;
     }
 
-    public void setVarianceSymbSlopes(HashMap<Double, Double> varianceSymbSlopes) {
-        this.varianceSymbSlopes = varianceSymbSlopes;
+    public void setVarianceattachChance(HashMap<Double, Double> varianceattachChance) {
+        this.varianceattachChance = varianceattachChance;
     }
 
-    public HashMap<Double, Double> getVarianceSymbInts() {
-        return varianceSymbInts;
+    public HashMap<Double, Double> getVariancesymbAdv() {
+        return variancesymbAdv;
     }
 
-    public void setVarianceSymbInts(HashMap<Double, Double> varianceSymbInts) {
-        this.varianceSymbInts = varianceSymbInts;
+    public void setVariancesymbAdv(HashMap<Double, Double> variancesymbAdv) {
+        this.variancesymbAdv = variancesymbAdv;
+    }
+
+    public HashMap<Double, Double> getMeanfitDaph() {
+        return meanfitDaph;
+    }
+
+    public void setMeanfitDaph(HashMap<Double, Double> meanfitDaph) {
+        this.meanfitDaph = meanfitDaph;
+    }
+
+    public HashMap<Double, Double> getMeanfitSymb() {
+        return meanfitSymb;
+    }
+
+    public void setMeanfitSymb(HashMap<Double, Double> meanfitSymb) {
+        this.meanfitSymb = meanfitSymb;
+    }
+
+    public HashMap<Double, Double> getVariancefitDaph() {
+        return variancefitDaph;
+    }
+
+    public void setVariancefitDaph(HashMap<Double, Double> variancefitDaph) {
+        this.variancefitDaph = variancefitDaph;
+    }
+
+    public HashMap<Double, Double> getVariancefitSymb() {
+        return variancefitSymb;
+    }
+
+    public void setVariancefitSymb(HashMap<Double, Double> variancefitSymb) {
+        this.variancefitSymb = variancefitSymb;
     }
 
     @Override
     public String toString() {
         return "MeanData{" +
-                "meanDaphSlopes=" + meanDaphSlopes +
-                ", meanDaphInts=" + meanDaphInts +
-                ", meanSymbSlopes=" + meanSymbSlopes +
-                ", meanSymbInts=" + meanSymbInts +
-                ", varianceDaphSlopes=" + varianceDaphSlopes +
-                ", varianceDaphInts=" + varianceDaphInts +
-                ", varianceSymbSlopes=" + varianceSymbSlopes +
-                ", varianceSymbInts=" + varianceSymbInts +
+                "meansusceptChance=" + meansusceptChance +
+                ", meanhostAdv=" + meanhostAdv +
+                ", meanattachChance=" + meanattachChance +
+                ", meansymbAdv=" + meansymbAdv +
+                ", variancesusceptChance=" + variancesusceptChance +
+                ", variancehostAdv=" + variancehostAdv +
+                ", varianceattachChance=" + varianceattachChance +
+                ", variancesymbAdv=" + variancesymbAdv +
+                ", meanfitDaph=" + meanfitDaph +
+                ", meanfitSymb=" + meanfitSymb +
+                ", variancefitDaph=" + variancefitDaph +
+                ", variancefitSymb=" + variancefitSymb +
                 '}';
     }
 }
