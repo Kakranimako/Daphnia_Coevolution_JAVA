@@ -22,7 +22,8 @@ public class Experiment {
 
     private HashMap<String, Double> varDict;
     private Collected_data bigData;
-    private String variablePar;
+    private String variablePar1;
+    private String variablePar2;
     private String mode;
     private HashMap<String, Double> modeArgs;
 
@@ -32,14 +33,16 @@ public class Experiment {
     private ArrayList<Double> datapoints;
     private int runs;
 
-    private double varParValue;
+    private double varParValue1;
+    private double varParValue2;
 
 
 
-    public Experiment (String expName, int runs, double initMeanGene1, double initMeanGene2, double initVariance, double scarcity, double num_of_gens, double daphPopSize,
+    public Experiment (String expName, int runs, double initMeanGene1, double initMeanGene2, double initVariance,
+                       double scarcity, double num_of_gens, double daphPopSize,
                        double symbPopSize, double mut_chance, double mutStepSize, double vir_parD,
-                       double vir_parS, double fitPen, double fitPenSymb, String variablePar, double varParValue, String mode,
-                       HashMap<String, Double> modeArgs) {
+                       double vir_parS, double fitPen, double fitPenSymb, String variablePar1, double varParValue1,
+                       String variablePar2, double varParValue2, String mode, HashMap<String, Double> modeArgs) {
 
         Variables dummyVars = new Variables( new HashMap<>());
 
@@ -58,7 +61,9 @@ public class Experiment {
         dummyVars.getVarDict().put("initMeanGene2", initMeanGene2);
         dummyVars.getVarDict().put("initVariance",initVariance);
 
-        dummyVars.getVarDict().put(variablePar, varParValue);
+        dummyVars.getVarDict().put(variablePar1, varParValue1);
+        dummyVars.getVarDict().put(variablePar2, varParValue2);
+
 
 
 
@@ -116,11 +121,13 @@ public class Experiment {
         this.runs = runs;
         this.bigData = bigData;
         this.datapoints = datapoints;
-        this.variablePar = variablePar;
+        this.variablePar1 = variablePar1;
+        this.variablePar2 = variablePar2;
         this.mode = mode;
         this.modeArgs = modeArgs;
         this.expName = expName;
-        this.varParValue = varParValue;
+        this.varParValue1 = varParValue1;
+        this.varParValue2 = varParValue2;
 
 
 
@@ -134,12 +141,12 @@ public class Experiment {
 
             progressbar.step();
 
-            bigData = new Simulation().simulator(varDict, bigData, datapoints, variablePar, mode, modeArgs);
+            bigData = new Simulation().simulator(varDict, bigData, datapoints, variablePar1, mode, modeArgs);
         }
 
         MeanData maeniee = new MeanData().calcMeansVariance(bigData);
         try {
-            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar, varParValue, expName);
+            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar1, varParValue1, expName);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

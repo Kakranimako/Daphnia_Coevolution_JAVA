@@ -6,6 +6,7 @@ import Organism.OrganismFactory;
 import Organism.Symbiont;
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -139,22 +140,15 @@ public class Simulation {
         HashMap<String, Double> virDict = cr_virDict(allPops, varis.get("scarcity"));
 
         for (Daphnia daph : allPops.getDaphniaPop().values()) {
-            boolean decision = kickDecision(daph, virDict);
-            Symbiont oldsymb = allPops.getGutSymbionts().get(daph.getpartner());
-            oldsymb.setFitness(1);
 
-            if (decision) {
-                allPops = kick_and_Replace(daph, allPops);
+            Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
 
-                Symbiont newSymb = allPops.getGutSymbionts().get(daph.getpartner());
-                newSymb.setFitness(1 + (varis.get("vir_parS") * calcVir(newSymb, varis)));
+            daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("vir_parD")* daph.getGene1());
+            symb.setFitness(1 + varis.get("vir_parS") * virDict.get(daph.getName()) * varis.get("beta")*(1 - daph.getGene1()));
 
-                daph.setFitness(varis.get("fitPen"));
-                oldsymb.setFitness(varis.get("fitPenSymb"));
-            }
-            else {
-                oldsymb.setFitness(1 + (varis.get("vir_parS") * virDict.get(daph.getName())));
-                daph.setFitness(1 - (varis.get("vir_parD") * virDict.get(daph.getName())));
+            if (daph.getFitness() < varis.get("daphFitThreshold")) {
+                daph.setFitness(0);
+                symb.setFitness(varis.get("symbFitThreshold"));
             }
         }
 
@@ -515,7 +509,7 @@ public class Simulation {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Boolean kickDecision(Daphnia daph, HashMap<String, Double> virDict) {
+    public Boolean viabilityTest(Daphnia daph, HashMap<String, Double> virDict) {
 
         double c = new Random().nextDouble(0, 1);
 
@@ -560,7 +554,9 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String filename) throws IOException {
 
-        FileWriter file = new FileWriter(filename +".csv");
+        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/Recent_exp");
+        folder.mkdir();
+        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/Recent_exp/" +filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
