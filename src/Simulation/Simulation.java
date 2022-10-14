@@ -60,12 +60,14 @@ public class Simulation {
 
             allPops = interaction(allPops, variables);
 
-            allPops = reprod(allPops, variables);
-
-
             if (datapoints.contains(genNum)) {
                 bigdata = dataCollected(allPops, bigdata, variables, genNum);
             }
+
+            allPops = reprod(allPops, variables);
+
+
+
         }
         
         return bigdata;
@@ -79,14 +81,14 @@ public class Simulation {
 
     public Populations initialisation(Populations allPops, HashMap<String, Double> variables){
 
-        HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("initMeanGene1"),
-                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("symbPopSize"));
+        HashMap<String, Symbiont> symbiontPop = new OrganismFactory().CreateSymbiont("Symbiont", variables.get("initGene1"),
+                variables.get("initVar1"), variables.get("initGene2"), variables.get("initVar2"), variables.get("symbPopSize"));
         allPops.setSymbiontPop(symbiontPop);
 
 
 
-        HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("initMeanGene1"),
-                variables.get("initVariance"), variables.get("initMeanGene2"), variables.get("daphPopSize"));
+        HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("resistGene"),
+                variables.get("resistGeneVar"), variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
 
 
@@ -143,12 +145,12 @@ public class Simulation {
 
             Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
 
-            daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("vir_parD")* daph.getGene1());
-            symb.setFitness(1 + varis.get("vir_parS") * virDict.get(daph.getName()) * varis.get("beta")*(1 - daph.getGene1()));
+            daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
+            symb.setFitness(1 + varis.get("S_virCoeff") * virDict.get(daph.getName()) * varis.get("S_resistCoeff")*(1 - daph.getGene1()));
 
-            if (daph.getFitness() < varis.get("daphFitThreshold")) {
+            if (daph.getFitness() < varis.get("D_reducedFit")) {
                 daph.setFitness(0);
-                symb.setFitness(varis.get("symbFitThreshold"));
+                symb.setFitness(varis.get("S_reducedFit"));
             }
         }
 
@@ -157,46 +159,52 @@ public class Simulation {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Collected_data dataCollected (Populations allPops, Collected_data bigdata, HashMap<String, Double> varis, double genNum) {
 
-        double daphSlopesAvg = 0;
-        double daphIntsAvg = 0;
-        double symbSlopesAvg = 0;
-        double symbIntsAvg = 0;
+        double virAvg = 0;
+        double avgFitD = 0;
+        double avgFitS = 0;
+
+
+
+        HashMap<String, Double> virDict = cr_virDict(allPops, varis.get("scarcity"));
+
+        for (Double virulence: virDict.values()) {
+            virAvg += virulence;
+        }
+        virAvg = virAvg/virDict.size();
 
         for (Symbiont symb: allPops.getSymbiontPop().values()) {
-            symbSlopesAvg += symb.getGene1();
-            symbIntsAvg += symb.getGene2();
+            avgFitS += symb.getFitness();
         }
-        symbSlopesAvg = symbSlopesAvg/allPops.getSymbiontPop().size();
-        symbIntsAvg = symbIntsAvg/allPops.getSymbiontPop().size();
+        avgFitS = avgFitS/allPops.getSymbiontPop().size();
+
 
         for (Daphnia daph: allPops.getDaphniaPop().values()) {
-            daphSlopesAvg += daph.getGene1();
-            daphIntsAvg += daph.getGene2();
+            avgFitD += daph.getFitness();
         }
-        daphSlopesAvg = daphSlopesAvg/allPops.getDaphniaPop().size();
-        daphIntsAvg = daphIntsAvg/allPops.getDaphniaPop().size();
+        avgFitD = avgFitD/allPops.getDaphniaPop().size();
+
 
         HashMap<String, Double> avgDataDict = new HashMap<>();
-        avgDataDict.put("daphSlopes", daphSlopesAvg);
-        avgDataDict.put("daphInts", daphIntsAvg);
-        avgDataDict.put("symbSlopes", symbSlopesAvg);
-        avgDataDict.put("symbInts", symbIntsAvg);
+        avgDataDict.put("avgFitD", avgFitD);
+        avgDataDict.put("avgFitS", avgFitS);
+        avgDataDict.put("virulence", virAvg);
+
 
 
     
         ArrayList<String> colHeadersParams = new ArrayList<>();
         colHeadersParams.add("scarcity");
-        colHeadersParams.add("vir_parD");
-        colHeadersParams.add("vir_parS");
-        colHeadersParams.add("fitPen");
+        colHeadersParams.add("D_reducedFit");
+        colHeadersParams.add("S_reducedFit");
+        colHeadersParams.add("D_resistCoeff");
+        colHeadersParams.add("S_resistCoeff");
         colHeadersParams.add("mutStepSize");
         colHeadersParams.add("mut_chance");
 
         ArrayList<String> colHeadersData = new ArrayList<>();
-        colHeadersData.add("daphSlopes");
-        colHeadersData.add("daphInts");
-        colHeadersData.add("symbSlopes");
-        colHeadersData.add("symbInts");
+        colHeadersData.add("avgFitD");
+        colHeadersData.add("avgFitS");
+        colHeadersData.add("virulence");
 
         bigdata.getColumns().get("generations").get(genNum).add(genNum);
 
@@ -213,9 +221,6 @@ public class Simulation {
             column.get(genNum).add(avgDataDict.get(columnname2));
         }
 
-
-
-        
         return bigdata;
                 
     }
@@ -552,16 +557,16 @@ public class Simulation {
         return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String filename) throws IOException {
+    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String foldername, String filename) throws IOException {
 
-        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/Recent_exp");
+        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/Recent_exp/" +filename+".csv");
+        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
-                "Init_meanG1" + "," + varis.get("initMeanGene1") + ",," + "Init_meanG2" + "," + varis.get("initMeanGene2") + ",," +
-                "Init_StD" + "," + varis.get("initVariance")+ "\n" +
+                "InitGene1" + "," + varis.get("initGene1") + ",," + "InitGene2" + "," + varis.get("initGene2") + ",," +
+                "Init_G1_StD" + "," + varis.get("initVar1")+ ",," + "Init_G2_StD" + "," + varis.get("initVar2")+ "\n" +
                 "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
                 "variableParam" + "," + variablePar + ",," + "varParValue" + "," + varParvalue + ",," +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +

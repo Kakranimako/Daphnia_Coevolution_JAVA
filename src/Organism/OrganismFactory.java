@@ -11,11 +11,11 @@ import java.util.Random;
 
 public class OrganismFactory {
 
-    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
+    public HashMap<String, Daphnia> CreateDaphnias(String orgname, double resistGene, double resistGeneVar, double size){
         HashMap<String, Daphnia> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
-            double gene1 = new Random().nextGaussian(-3, initVariance); //HARDCODE
+            double gene1 = new Random().nextGaussian(resistGene, resistGeneVar);
             double gene2 = 0.5;
             //new Random().nextGaussian(1, initVariance*0.1); //HARDCODE
             double fitness = 1;
@@ -24,12 +24,12 @@ public class OrganismFactory {
         }
         return org_pop;
     }
-    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double initMeanGene1, double initVariance, double initMeanGene2, double size){
+    public HashMap<String, Symbiont> CreateSymbiont(String orgname, double initGene1, double initVar1, double initGene2, double initVar2, double size){
         HashMap<String, Symbiont> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
-            double gene1 = new Random().nextGaussian(initMeanGene1, initVariance);
-            double gene2 = new Random().nextGaussian(initMeanGene2, initVariance);
+            double gene1 = new Random().nextGaussian(initGene1, initVar1);
+            double gene2 = new Random().nextGaussian(initGene2, initVar2);
             double fitness = 1;
             Symbiont symbiont = new Symbiont(name, gene1, gene2, fitness);
             org_pop.put(name, symbiont);
@@ -71,7 +71,7 @@ public class OrganismFactory {
             String name = orgname + "_" + nameNum;
 
             Daphnia parent = Daphniapop.get(parentList.get(i));
-            double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), 0.1);
+            double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"));
             double gene2 = 0.5;
             //new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), 0.2*varis.get("mutStepSize")); //HARDCODE
             double fitness = 1;

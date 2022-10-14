@@ -30,6 +30,7 @@ public class Experiment {
     private ProgressBar progressbar;
     private String expName;
 
+    private String foldername;
     private ArrayList<Double> datapoints;
     private int runs;
 
@@ -38,10 +39,10 @@ public class Experiment {
 
 
 
-    public Experiment (String expName, int runs, double initMeanGene1, double initMeanGene2, double initVariance,
-                       double scarcity, double num_of_gens, double daphPopSize,
-                       double symbPopSize, double mut_chance, double mutStepSize, double vir_parD,
-                       double vir_parS, double fitPen, double fitPenSymb, String variablePar1, double varParValue1,
+    public Experiment (String foldername, String expName, int runs,double scarcity, double num_of_gens, double daphPopSize,
+                       double symbPopSize, double mut_chance, double mutStepSize, double initGene1, double initVar1,
+                       double initGene2, double initVar2, double resistGene, double resistVar, double D_resistCoeff,
+                       double S_resistCoeff, double D_reducedFit, double S_reducedFit, String variablePar1, double varParValue1,
                        String variablePar2, double varParValue2, String mode, HashMap<String, Double> modeArgs) {
 
         Variables dummyVars = new Variables( new HashMap<>());
@@ -53,13 +54,17 @@ public class Experiment {
         dummyVars.getVarDict().put("symbPopSize", symbPopSize);
         dummyVars.getVarDict().put("mut_chance", mut_chance);
         dummyVars.getVarDict().put("mutStepSize", mutStepSize);
-        dummyVars.getVarDict().put("vir_parD", vir_parD);
-        dummyVars.getVarDict().put("vir_parS", vir_parS);
-        dummyVars.getVarDict().put("fitPen", fitPen);
-        dummyVars.getVarDict().put("fitPenSymb", fitPenSymb);
-        dummyVars.getVarDict().put("initMeanGene1", initMeanGene1);
-        dummyVars.getVarDict().put("initMeanGene2", initMeanGene2);
-        dummyVars.getVarDict().put("initVariance",initVariance);
+        dummyVars.getVarDict().put("D_resistCoeff", D_resistCoeff);
+        dummyVars.getVarDict().put("S_resistCoeff", S_resistCoeff);
+        dummyVars.getVarDict().put("D_reducedFit", D_reducedFit);
+        dummyVars.getVarDict().put("S_reducedFit", S_reducedFit);
+        dummyVars.getVarDict().put("initGene1", initGene1);
+        dummyVars.getVarDict().put("initGene2", initGene2);
+        dummyVars.getVarDict().put("initVar1", initVar1);
+        dummyVars.getVarDict().put("initVar2", initVar2);
+        dummyVars.getVarDict().put("resistVar", resistVar);
+        dummyVars.getVarDict().put("resistGene", resistGene);
+
 
         dummyVars.getVarDict().put(variablePar1, varParValue1);
         dummyVars.getVarDict().put(variablePar2, varParValue2);
@@ -71,31 +76,33 @@ public class Experiment {
 
         HashMap<Double, ArrayList<Double>> generations = new HashMap<>();
         HashMap<Double, ArrayList<Double>> scarcityList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> vir_parDList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> vir_parSList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> fitnessPenalty = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> virulenceList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> FitS_List = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> fitD_List = new HashMap<>();
         HashMap<Double, ArrayList<Double>> mutation_chance = new HashMap<>();
         HashMap<Double, ArrayList<Double>> mutStepSizeList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> daphSlopes = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> daphInts = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> symbSlopes = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> symbInts = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> D_reducedFitList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> S_reducedFitList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> D_resistCoeffList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> S_reducedCoeffList = new HashMap<>();
 
         Collected_data bigData = new Collected_data(columns);
 
 
         bigData.getColumns().put("generations", generations);
-        bigData.getColumns().put("vir_parD", vir_parDList);
-        bigData.getColumns().put("vir_parS", vir_parSList);
-        bigData.getColumns().put("fitPen", fitnessPenalty);
+        bigData.getColumns().put("virulence", virulenceList);
+        bigData.getColumns().put("avgFitS", FitS_List);
+        bigData.getColumns().put("avgFitD", fitD_List);
         bigData.getColumns().put("mut_chance", mutation_chance);
         bigData.getColumns().put("mutStepSize", mutStepSizeList);
-        bigData.getColumns().put("daphSlopes", daphSlopes);
-        bigData.getColumns().put("daphInts", daphInts);
-        bigData.getColumns().put("symbSlopes", symbSlopes);
-        bigData.getColumns().put("symbInts", symbInts);
+        bigData.getColumns().put("D_reducedFit", D_reducedFitList);
+        bigData.getColumns().put("S_reducedFit", S_reducedFitList);
+        bigData.getColumns().put("D_resistCoeff", D_resistCoeffList);
         bigData.getColumns().put("scarcity", scarcityList);
+        bigData.getColumns().put("S_reducedCoeff", S_reducedCoeffList);
 
+
+        // create datapoints that we actually want to record the data for
         ArrayList<Double> datapoints = new ArrayList<>();
         double multiplier = dummyVars.getVarDict().get("num_of_gens")/100.0;
             for (int i = 0; i <= 100; i++ ) {
@@ -128,6 +135,7 @@ public class Experiment {
         this.expName = expName;
         this.varParValue1 = varParValue1;
         this.varParValue2 = varParValue2;
+        this.foldername = foldername;
 
 
 
@@ -146,7 +154,7 @@ public class Experiment {
 
         MeanData maeniee = new MeanData().calcMeansVariance(bigData);
         try {
-            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar1, varParValue1, expName);
+            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar1, varParValue1, foldername, expName);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
