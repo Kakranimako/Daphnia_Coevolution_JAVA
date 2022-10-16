@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int runs = 2;
+        int runs = 100;
         double initGene1 = 0.0;
         double initGene2 = 0.1;
         double initVarGene1 = 0.1;
@@ -23,10 +23,10 @@ public class Main {
         double resistVar = 0.1;
         double scarcity = 0.5;
         double num_of_gens = 1000;
-        double daphPopSize = 10;
-        double symbPopSize = 20;
+        double daphPopSize = 1000;
+        double symbPopSize = 2000;
         double mut_chance = 0.01;
-        double mutStepSize = 0.01;
+        double mutStepSize = 0.001;
         double D_resistCoeff = 0.002;
         double S_resistCoeff = 0.002;
         double S_virCoeff = 0.02;
