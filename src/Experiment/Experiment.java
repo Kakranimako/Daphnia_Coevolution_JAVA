@@ -39,10 +39,10 @@ public class Experiment {
 
 
 
-    public Experiment (String foldername, String expName, int runs,double scarcity, double num_of_gens, double daphPopSize,
+    public Experiment (String foldername, String expName, int runs, double scarcity, double num_of_gens, double daphPopSize,
                        double symbPopSize, double mut_chance, double mutStepSize, double initGene1, double initVar1,
                        double initGene2, double initVar2, double resistGene, double resistVar, double D_resistCoeff,
-                       double S_resistCoeff, double D_reducedFit, double S_reducedFit, String variablePar1, double varParValue1,
+                       double S_resistCoeff, double S_virCoeff, double D_reducedFit, double S_reducedFit, String variablePar1, double varParValue1,
                        String variablePar2, double varParValue2, String mode, HashMap<String, Double> modeArgs) {
 
         Variables dummyVars = new Variables( new HashMap<>());
@@ -64,6 +64,7 @@ public class Experiment {
         dummyVars.getVarDict().put("initVar2", initVar2);
         dummyVars.getVarDict().put("resistVar", resistVar);
         dummyVars.getVarDict().put("resistGene", resistGene);
+        dummyVars.getVarDict().put("S_virCoeff", S_virCoeff);
 
 
         dummyVars.getVarDict().put(variablePar1, varParValue1);
@@ -84,7 +85,9 @@ public class Experiment {
         HashMap<Double, ArrayList<Double>> D_reducedFitList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> S_reducedFitList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> D_resistCoeffList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> S_reducedCoeffList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> S_resistCoeffList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> S_virCoeffList = new HashMap<>();
+
 
         Collected_data bigData = new Collected_data(columns);
 
@@ -99,7 +102,9 @@ public class Experiment {
         bigData.getColumns().put("S_reducedFit", S_reducedFitList);
         bigData.getColumns().put("D_resistCoeff", D_resistCoeffList);
         bigData.getColumns().put("scarcity", scarcityList);
-        bigData.getColumns().put("S_reducedCoeff", S_reducedCoeffList);
+        bigData.getColumns().put("S_resistCoeff", S_resistCoeffList);
+        bigData.getColumns().put("S_virCoeff", S_virCoeffList);
+
 
 
         // create datapoints that we actually want to record the data for
@@ -154,7 +159,7 @@ public class Experiment {
 
         MeanData maeniee = new MeanData().calcMeansVariance(bigData);
         try {
-            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar1, varParValue1, foldername, expName);
+            new Simulation().toTXT(bigData, maeniee, varDict, mode, variablePar1, varParValue1, variablePar2, varParValue2, foldername, expName);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

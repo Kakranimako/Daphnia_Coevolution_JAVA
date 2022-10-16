@@ -9,6 +9,9 @@ import Organism.Symbiont;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Simulation {
@@ -88,7 +91,7 @@ public class Simulation {
 
 
         HashMap<String, Daphnia> daphniaPop = new OrganismFactory().CreateDaphnias("Daphnia", variables.get("resistGene"),
-                variables.get("resistGeneVar"), variables.get("daphPopSize"));
+                variables.get("resistVar"), variables.get("daphPopSize"));
         allPops.setDaphniaPop(daphniaPop);
 
 
@@ -198,6 +201,7 @@ public class Simulation {
         colHeadersParams.add("S_reducedFit");
         colHeadersParams.add("D_resistCoeff");
         colHeadersParams.add("S_resistCoeff");
+        colHeadersParams.add("S_virCoeff");
         colHeadersParams.add("mutStepSize");
         colHeadersParams.add("mut_chance");
 
@@ -297,7 +301,7 @@ public class Simulation {
         ArrayList<String> parentCumulList = new ArrayList<>();
 
         for(Organism org : testpoplist) {
-            sumfit = sumfit + 1000*org.getFitness();
+            sumfit = sumfit + 10*org.getFitness();
             cumulFitList.add(sumfit);
             parentCumulList.add(org.getName());
         }
@@ -311,42 +315,32 @@ public class Simulation {
 
         ArrayList<String> parentList = new ArrayList<>();
 
+        ArrayList<Double> cList = new ArrayList<>();
+        cList.addAll(picksList.getCumulFitList());
+
         int sizelist = picksList.getCumulFitList().size();
+        double last_element = cList.get(sizelist-1);
+
 
 
         int i = 1;
         while ( i <= sizelist) {
 
-            double target = new Random().nextDouble(0, picksList.getCumulFitList().get(sizelist-1));
 
-            int linkergrens = 0;
-            int rechtergrens = picksList.getCumulFitList().size()-1;
-            int targIndex = (linkergrens + rechtergrens)/2;
-            int oldtargIndex = -2;
+            double target = new Random().nextDouble(last_element);
 
-            while(targIndex != 0 && !(picksList.getCumulFitList().get(targIndex) >= target && picksList.getCumulFitList().get(targIndex-1) < target)) {
+            ArrayList<Double> aList = new ArrayList<>();
+            aList.addAll(picksList.getCumulFitList());
+            aList.add(target);
 
+            Collections.sort(aList);
 
-                if (picksList.getCumulFitList().get(targIndex) > target) {
-                    rechtergrens = targIndex;
-                }
-                else linkergrens = targIndex;
-
-                targIndex = (linkergrens + rechtergrens)/2;
-
-                if (oldtargIndex == linkergrens) {
-                    targIndex += 1;
-                }
-                oldtargIndex = targIndex;
-            }
-
+            int targIndex = aList.indexOf(target);
             parentList.add(picksList.getParentCumulList().get(targIndex));
             i = i+1;
         }
         
         picksList.setParentList(parentList);
-
-
 
         return picksList;
     }
@@ -557,7 +551,7 @@ public class Simulation {
         return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String variablePar, Double varParvalue, String foldername, String filename) throws IOException {
+    public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
         File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/" + foldername);
         folder.mkdir();
@@ -567,33 +561,32 @@ public class Simulation {
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
                 "InitGene1" + "," + varis.get("initGene1") + ",," + "InitGene2" + "," + varis.get("initGene2") + ",," +
                 "Init_G1_StD" + "," + varis.get("initVar1")+ ",," + "Init_G2_StD" + "," + varis.get("initVar2")+ "\n" +
-                "generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
-                "variableParam" + "," + variablePar + ",," + "varParValue" + "," + varParvalue + ",," +"\n" +
+                "ResistGene," + varis.get("resistGene") + ",,resistVar," + varis.get("resistVar") + ",,generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
+                "varPar1" + "," + varPar1 + "," + varParvalue1+ ",," + "varPar2," + varPar2 + "," + varParvalue2 +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
                 "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
-                "fitPenDaph" + "," + varis.get("fitPen") + "," + "," + "fitPenSymb" + "," + varis.get("fitPenSymb") +"\n"+
+                "D_reducedFit" + "," + varis.get("D_reducedFit") + ",," + "S_reducedFit" + "," + varis.get("S_reducedFit") +"\n"+
                 "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
 
-        file.write("Generation" + "," + "scarcity" + "," + "vir_parD" + "," + "vir_parS" + ","
-                + "daphSlopes" + "," +  "dSlopesStD" + "," + "daphInts" + "," + "dIntsStd" + "," +
-                "symbSlopes" + "," + "sSlopesStD" + "," + "symbInts" + "," + "sIntsStD" + "\n");
+        file.write("Generation" + "," + "scarcity" + "," + "virulence" + "," +"vir_SEM," + "avgFitD" + ",avgfitD_SEM,"
+                + "avgFitS" + ",avgFitS_SEM," +  "D_resistCoeff" + "," + "S_resistCoeff,S_virCoeff" + "\n");
 
         for (double datapoint: bigdata.getColumns().get("generations").keySet()) {
 
             String dataline = String.valueOf(bigdata.getColumns().get("generations").get(datapoint).get(0)) + "," +
                     String.valueOf(bigdata.getColumns().get("scarcity").get(datapoint).get(0)) + "," +
-                    String.valueOf(bigdata.getColumns().get("vir_parD").get(datapoint).get(0)) + "," +
-                    String.valueOf(bigdata.getColumns().get("vir_parS").get(datapoint).get(0)) + "," +
-                    String.valueOf(meanie.getMeanDaphSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanDaphInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanSymbSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceSymbSlopes().get(datapoint)) + "," +
-                    String.valueOf(meanie.getMeanSymbInts().get(datapoint)) + "," +
-                    String.valueOf(meanie.getVarianceDaphInts().get(datapoint));
+                    String.valueOf(meanie.getMeanVirulence().get(datapoint)) + "," +
+                    String.valueOf(meanie.getSem_AvgFitD().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanAvgFitD().get(datapoint)) + "," +
+                    String.valueOf(meanie.getSem_AvgFitD().get(datapoint)) + "," +
+                    String.valueOf(meanie.getMeanAvgFitS().get(datapoint)) + "," +
+                    String.valueOf(meanie.getSem_AvgFitS().get(datapoint)) + "," +
+                    String.valueOf(bigdata.getColumns().get("D_resistCoeff").get(datapoint).get(0)) + "," +
+                    String.valueOf(bigdata.getColumns().get("S_resistCoeff").get(datapoint).get(0)) + "," +
+                    String.valueOf(bigdata.getColumns().get("S_virCoeff").get(datapoint).get(0));
 
-            file.write(dataline + "\n");
+
+                    file.write(dataline + "\n");
         }
 
         file.close();
