@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:experiment class created. resistance gene incorporated, not last work lol">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/Experiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/MeanData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/MeanData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
-    </list>
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -258,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665791474244</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests">
+      <created>1665904708960</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1665904708960</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -298,7 +299,8 @@
     <MESSAGE value="altversion in java: multiprocessing done" />
     <MESSAGE value="altversion in java:experiment class created. resistance gene incorporated, last work here for now" />
     <MESSAGE value="altversion in java:experiment class created. resistance gene incorporated, not last work lol" />
-    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:experiment class created. resistance gene incorporated, not last work lol" />
+    <MESSAGE value="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
