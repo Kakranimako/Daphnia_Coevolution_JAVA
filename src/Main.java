@@ -28,7 +28,7 @@ public class Main {
         double mut_chance = 0.01;
         double mutStepSize = 0.001;
         double D_resistCoeff = 0.002;
-        double S_resistCoeff = 0.002;
+        double S_resistCoeff = 0.02;
         double S_virCoeff = 0.02;
         double D_reducedFit = 0;
         double S_reducedFit = 0.3;
