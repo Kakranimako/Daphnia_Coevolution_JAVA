@@ -69,8 +69,12 @@ public class ExperimentMatrix {
 
         for (int i = 0; i < parValues.size(); i++) {
             for (int j = 0; j < parValues2.size(); j++) {
+
+                double num1 = parValues.get(i) *1000;
+                double num2 = parValues2.get(j) *1000;
+
                 Experiment exp1 = new Experiment(mode + "_" + variablePar1 + "_" + variablePar2,
-                        mode + "_" + variablePar1 + "_" + parValues.get(i) + "_" + variablePar2 + "_" + parValues2.get(j),
+                        mode + "_" + variablePar1 + "_" + (int) num1  + "_" + variablePar2 + "_" + (int) num2,
                         runs, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, initGene1,
                         initVarGene1, initGene2, initVarGene2, resistGene, resistVar, resistCoeffD, resistCoeffS, virCoeffS, reducedFitD, reducedFitS,
                         variablePar1, parValues.get(i), variablePar2, parValues2.get(j),

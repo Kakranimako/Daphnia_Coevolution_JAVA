@@ -2,10 +2,12 @@ package Simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.DoubleToLongFunction;
 
 public class MeanData {
 
     private HashMap<Double, Double> meanVirulence;
+    private HashMap<Double, Double> meanResist;
     
     private HashMap<Double, Double> meanAvgFitD;
     
@@ -17,19 +19,24 @@ public class MeanData {
 
     private HashMap<Double, Double> sem_AvgFitS;
 
+    private HashMap<Double, Double> sem_Resist;
+
 
     public MeanData() {
 
     }
 
-    public MeanData(HashMap<Double, Double> meanVirulence, HashMap<Double, Double> meanAvgFitD, HashMap<Double,
-            Double> meanAvgFitS, HashMap<Double, Double> sem_Virulence, HashMap<Double, Double> sem_AvgFitD, HashMap<Double, Double> sem_AvgFitS) {
+    public MeanData(HashMap<Double, Double> meanVirulence, HashMap<Double, Double> meanResist, HashMap<Double, Double> meanAvgFitD, HashMap<Double,
+            Double> meanAvgFitS, HashMap<Double, Double> sem_Virulence, HashMap<Double, Double> sem_AvgFitD, HashMap<Double, Double> sem_AvgFitS,
+                    HashMap<Double, Double> sem_Resist) {
         this.meanVirulence = meanVirulence;
+        this.meanResist = meanResist;
         this.meanAvgFitD = meanAvgFitD;
         this.meanAvgFitS = meanAvgFitS;
         this.sem_Virulence = sem_Virulence;
         this.sem_AvgFitD = sem_AvgFitD;
         this.sem_AvgFitS = sem_AvgFitS;
+        this.sem_Resist = sem_Resist;
     }
 
     public MeanData calcMeansVariance (Collected_data bigdata) {
@@ -40,8 +47,15 @@ public class MeanData {
         HashMap<Double, Double> sem_Virulence = new HashMap<>();
         HashMap<Double, Double> sem_AvgFitD= new HashMap<>();
         HashMap<Double, Double> sem_AvgFitS = new HashMap<>();
+        HashMap<Double, Double> sem_resistGene = new HashMap<>();
+        HashMap<Double, Double> resistGene = new HashMap<>();
 
         for (double datapoint : bigdata.getColumns().get("generations").keySet()) {
+
+            double meanResistGene = calcAvg(bigdata.getColumns().get("avgResist").get(datapoint));
+            resistGene.put(datapoint, meanResistGene);
+
+            sem_resistGene.put(datapoint, calcVariance(bigdata.getColumns().get("avgResist").get(datapoint), meanResistGene));
 
             double meanVir = calcAvg(bigdata.getColumns().get("virulence").get(datapoint));
             meanVirulence.put(datapoint, meanVir);
@@ -64,8 +78,8 @@ public class MeanData {
         }
 
 
-        return new MeanData(meanVirulence, meanAvgFitD, meanAvgFitS,
-                sem_Virulence, sem_AvgFitD, sem_AvgFitS);
+        return new MeanData(resistGene, meanVirulence, meanAvgFitD, meanAvgFitS,
+                sem_Virulence, sem_AvgFitD, sem_AvgFitS, sem_resistGene);
     }
 
     public Double calcAvg (ArrayList<Double> listy) {
@@ -134,5 +148,21 @@ public class MeanData {
 
     public void setSem_AvgFitS(HashMap<Double, Double> sem_AvgFitS) {
         this.sem_AvgFitS = sem_AvgFitS;
+    }
+
+    public HashMap<Double, Double> getMeanResist() {
+        return meanResist;
+    }
+
+    public void setMeanResist(HashMap<Double, Double> meanResist) {
+        this.meanResist = meanResist;
+    }
+
+    public HashMap<Double, Double> getSem_Resist() {
+        return sem_Resist;
+    }
+
+    public void setSem_Resist(HashMap<Double, Double> sem_Resist) {
+        this.sem_Resist = sem_Resist;
     }
 }

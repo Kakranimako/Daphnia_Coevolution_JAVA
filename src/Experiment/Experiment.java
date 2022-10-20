@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -78,6 +79,7 @@ public class Experiment {
         HashMap<Double, ArrayList<Double>> generations = new HashMap<>();
         HashMap<Double, ArrayList<Double>> scarcityList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> virulenceList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> resistList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> FitS_List = new HashMap<>();
         HashMap<Double, ArrayList<Double>> fitD_List = new HashMap<>();
         HashMap<Double, ArrayList<Double>> mutation_chance = new HashMap<>();
@@ -104,21 +106,25 @@ public class Experiment {
         bigData.getColumns().put("scarcity", scarcityList);
         bigData.getColumns().put("S_resistCoeff", S_resistCoeffList);
         bigData.getColumns().put("S_virCoeff", S_virCoeffList);
+        bigData.getColumns().put("avgResist", resistList);
 
 
 
         // create datapoints that we actually want to record the data for
         ArrayList<Double> datapoints = new ArrayList<>();
         double multiplier = dummyVars.getVarDict().get("num_of_gens")/100.0;
-            for (int i = 0; i <= 100; i++ ) {
-            datapoints.add(i*multiplier);
+        for (int i = 0; i <= 100; i++ ){
+            datapoints.add((double) Math.round( i*multiplier));
         }
+
+
+        Collections.sort(datapoints);
 
         for (HashMap<Double, ArrayList<Double>> column: bigData.getColumns().values()) {
 
-            for (Double datapoint : datapoints) {
+            for (int i = 0; i <= 100; i++ )  {
 
-                column.put(datapoint, new ArrayList<>());
+                column.put((double) Math.round(i*multiplier), new ArrayList<>());
 
             }
         }

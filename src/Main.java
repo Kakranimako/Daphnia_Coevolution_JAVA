@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int runs = 100;
+        int runs = 2;
         double initGene1 = 0.0;
         double initGene2 = 0.1;
         double initVarGene1 = 0.1;

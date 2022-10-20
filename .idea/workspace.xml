@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/Experiment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Experiment/ExperimentMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/ExperimentMatrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/MeanData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/MeanData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +280,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665905003193</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests">
+      <created>1666087625440</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1666087625440</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -326,11 +338,16 @@
           <option name="timeStamp" value="87" />
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Simulation/Simulation.java</url>
-          <line>329</line>
-          <option name="timeStamp" value="88" />
+          <url>file://$PROJECT_DIR$/src/Experiment/Experiment.java</url>
+          <line>130</line>
+          <option name="timeStamp" value="92" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="datapoints.get(4)" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

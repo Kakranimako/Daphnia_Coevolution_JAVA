@@ -165,6 +165,7 @@ public class Simulation {
         double virAvg = 0;
         double avgFitD = 0;
         double avgFitS = 0;
+        double avgResist = 0;
 
 
 
@@ -183,14 +184,17 @@ public class Simulation {
 
         for (Daphnia daph: allPops.getDaphniaPop().values()) {
             avgFitD += daph.getFitness();
+            avgResist += daph.getGene1();
         }
         avgFitD = avgFitD/allPops.getDaphniaPop().size();
+        avgResist = avgResist/allPops.getDaphniaPop().size();
 
 
         HashMap<String, Double> avgDataDict = new HashMap<>();
         avgDataDict.put("avgFitD", avgFitD);
         avgDataDict.put("avgFitS", avgFitS);
         avgDataDict.put("virulence", virAvg);
+        avgDataDict.put("avgResist", avgResist);
 
 
 
@@ -209,6 +213,7 @@ public class Simulation {
         colHeadersData.add("avgFitD");
         colHeadersData.add("avgFitS");
         colHeadersData.add("virulence");
+        colHeadersData.add("avgResist");
 
         bigdata.getColumns().get("generations").get(genNum).add(genNum);
 
@@ -216,7 +221,6 @@ public class Simulation {
             
             HashMap<Double, ArrayList<Double>> column = bigdata.getColumns().get(columnname);
             column.get(genNum).add(varis.get(columnname));
-
         }
 
         for (String columnname2 : colHeadersData) {
@@ -568,13 +572,15 @@ public class Simulation {
                 "D_reducedFit" + "," + varis.get("D_reducedFit") + ",," + "S_reducedFit" + "," + varis.get("S_reducedFit") +"\n"+
                 "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
 
-        file.write("Generation" + "," + "scarcity" + "," + "virulence" + "," +"vir_SEM," + "avgFitD" + ",avgfitD_SEM,"
+        file.write("Generation" + "," + "scarcity" + ",resistGene,resG_SEM," + "virulence" + "," +"vir_SEM," + "avgFitD" + ",avgfitD_SEM,"
                 + "avgFitS" + ",avgFitS_SEM," +  "D_resistCoeff" + "," + "S_resistCoeff,S_virCoeff" + "\n");
 
         for (double datapoint: bigdata.getColumns().get("generations").keySet()) {
 
             String dataline = String.valueOf(bigdata.getColumns().get("generations").get(datapoint).get(0)) + "," +
                     String.valueOf(bigdata.getColumns().get("scarcity").get(datapoint).get(0)) + "," +
+                    String.valueOf(meanie.getMeanResist().get(datapoint)) + "," +
+                    String.valueOf(meanie.getSem_Resist().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanVirulence().get(datapoint)) + "," +
                     String.valueOf(meanie.getSem_AvgFitD().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanAvgFitD().get(datapoint)) + "," +
