@@ -2,7 +2,7 @@ package Simulation;
 
 import Organism.Daphnia;
 import Organism.Symbiont;
-import org.w3c.dom.html.HTMLHeadElement;
+
 
 import java.util.HashMap;
 

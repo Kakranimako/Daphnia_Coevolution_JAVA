@@ -2,6 +2,7 @@ package Simulation;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class testchoose {
 
@@ -36,7 +37,7 @@ public class testchoose {
 
         for ( int i =0; i < sizelist; i++) {
 
-            int target = new Random().nextInt(0, sizelist);
+            int target = (int) ThreadLocalRandom.current().nextDouble(0, sizelist);
 
             parentList.add(testpop.get(target));
 

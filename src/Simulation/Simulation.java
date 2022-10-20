@@ -9,10 +9,9 @@ import Organism.Symbiont;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Simulation {
 
@@ -99,7 +98,7 @@ public class Simulation {
         Collections.shuffle(symbiontlist);
 
         for (Daphnia daphnia : allPops.getDaphniaPop().values()) {
-            int symbInd = new Random().nextInt(0, allPops.getDaphniaPop().size());
+            int symbInd = new Random().nextInt(allPops.getDaphniaPop().size());
             Symbiont symbiont = symbiontlist.get(symbInd);
             daphnia.setpartner(symbiont.getName());
             symbiont.setpartner(daphnia.getName());
@@ -331,7 +330,7 @@ public class Simulation {
         while ( i <= sizelist) {
 
 
-            double target = new Random().nextDouble(last_element);
+            double target = ThreadLocalRandom.current().nextDouble(last_element);
 
             ArrayList<Double> aList = new ArrayList<>();
             aList.addAll(picksList.getCumulFitList());
@@ -358,7 +357,7 @@ public class Simulation {
 
         if (c < mutChance) {
 
-            double scaled = new Random().nextDouble(-mutStep, mutStep);
+            double scaled = ThreadLocalRandom.current().nextDouble(-mutStep, mutStep);
 
             newgene = parentGene + scaled;
         }
@@ -458,7 +457,7 @@ public class Simulation {
 
         for (Daphnia daph : resultCoupling.getNonCoupledDaphs().values()) {
 
-            int symbInd = new Random().nextInt(0, newEnvSymbs.size());
+            int symbInd = (int) ThreadLocalRandom.current().nextDouble(0, newEnvSymbs.size());
             Symbiont symb = newEnvSymbsList.get(symbInd);
             daph.setpartner(symb.getName());
             symb.setpartner(daph.getName());
@@ -514,7 +513,7 @@ public class Simulation {
 
     public Boolean viabilityTest(Daphnia daph, HashMap<String, Double> virDict) {
 
-        double c = new Random().nextDouble(0, 1);
+        double c = ThreadLocalRandom.current().nextDouble(0, 1);
 
         double p = 1 / (1 + Math.exp(daph.getGene1() * (virDict.get(daph.getName()) - daph.getGene2())));
 
@@ -535,7 +534,7 @@ public class Simulation {
 
         oldSymby.setpartner("Geen");
 
-        int newSymbInd = new Random().nextInt(0, allPops.getEnvSymbionts().size()-1);
+        int newSymbInd = (int) ThreadLocalRandom.current().nextDouble(0, allPops.getEnvSymbionts().size()-1);
         Collection<Symbiont> symbiontCollection = allPops.getEnvSymbionts().values();
         ArrayList<Symbiont> symbList = new ArrayList<>(symbiontCollection);
 
@@ -557,9 +556,9 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/" + foldername);
+        File folder = new File("C:/Users/Ento/Desktop/Kakra Nimako/Experiment_Data/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/"+ foldername + "/" + filename+".csv");
+        FileWriter file = new FileWriter("C:/Users/Ento/Desktop/Kakra Nimako/Experiment_Data/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
@@ -656,7 +655,7 @@ public class Simulation {
         double length = varis.get("num_of_gens")+1;
 
         for (int i = 1; i < length; i++) {
-            stocList.add(new Random().nextDouble(mean, variance));
+            stocList.add(ThreadLocalRandom.current().nextDouble(mean, variance));
         }
         stocList.add(stocList.get(stocList.size()-1));
         return stocList;

@@ -6,9 +6,7 @@ import Simulation.Collected_data;
 import Simulation.Simulation;
 import Simulation.Variables;
 import Simulation.MeanData;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
+
 
 import java.io.IOException;
 
@@ -28,7 +26,7 @@ public class Experiment {
     private String mode;
     private HashMap<String, Double> modeArgs;
 
-    private ProgressBar progressbar;
+    //private ProgressBar progressbar;
     private String expName;
 
     private String foldername;
@@ -128,13 +126,13 @@ public class Experiment {
 
             }
         }
-        ProgressBarBuilder pb = new ProgressBarBuilder();
-        pb.setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK);
-        pb.setInitialMax(runs);
-        pb.setTaskName(expName+ ": ");
+        //ProgressBarBuilder pb = new ProgressBarBuilder();
+        //pb.setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK);
+        //pb.setInitialMax(runs);
+        //pb.setTaskName(expName+ ": ");
 
 
-        this.progressbar = pb.build();
+        //this.progressbar = pb.build();
         this.varDict = dummyVars.getVarDict();
         this.runs = runs;
         this.bigData = bigData;
@@ -158,7 +156,7 @@ public class Experiment {
 
         for (int runNum = 0; runNum < runs; runNum++) {
 
-            progressbar.step();
+            //progressbar.step();
 
             bigData = new Simulation().simulator(varDict, bigData, datapoints, variablePar1, mode, modeArgs);
         }
@@ -172,7 +170,7 @@ public class Experiment {
         }
 
         System.out.println("stopped now " + expName);
-        progressbar.close();
+        //progressbar.close();
         return 0;
 
     }
