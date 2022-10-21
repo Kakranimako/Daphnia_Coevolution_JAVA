@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int runs = 2;
+        int runs = 100;
         double initGene1 = 0.0;
         double initGene2 = 0.1;
         double initVarGene1 = 0.1;
@@ -26,7 +26,7 @@ public class Main {
         double daphPopSize = 1000;
         double symbPopSize = 2000;
         double mut_chance = 0.01;
-        double mutStepSize = 0.001;
+        double mutStepSize = 0.005;
         double D_resistCoeff = 0.002;
         double S_resistCoeff = 0.02;
         double S_virCoeff = 0.02;
@@ -49,12 +49,37 @@ public class Main {
         HashMap<String, Experiment> expList = expMatrixSetup.expMatrix(variablePar1, variablePar2);
 
        expList.values().parallelStream().forEach(experiment -> experiment.startExp());
+
+
+
+
        long stop = System.currentTimeMillis();
 
-       System.out.println("parrelisme " +  String.valueOf(stop-start));
+       System.out.println("One out of three done");
 
 
+        variablePar2 = "S_resistCoeff";
 
+        ExperimentMatrix expMatrixSetup2 = new ExperimentMatrix(runs, initGene1, initVarGene1, initGene2, initVarGene2, resistGene,
+                resistVar, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, D_reducedFit, S_reducedFit,
+                D_resistCoeff, S_resistCoeff, S_virCoeff, mode, start);
+
+        HashMap<String, Experiment> expList2 = expMatrixSetup2.expMatrix(variablePar1, variablePar2);
+
+        expList2.values().parallelStream().forEach(experiment -> experiment.startExp());
+
+        System.out.println("Two out of three done");
+
+        variablePar2 = "S_virCoeff";
+
+        ExperimentMatrix expMatrixSetup3 = new ExperimentMatrix(runs, initGene1, initVarGene1, initGene2, initVarGene2, resistGene,
+                resistVar, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, D_reducedFit, S_reducedFit,
+                D_resistCoeff, S_resistCoeff, S_virCoeff, mode, start);
+
+        HashMap<String, Experiment> expList3 = expMatrixSetup3.expMatrix(variablePar1, variablePar2);
+
+        expList3.values().parallelStream().forEach(experiment -> experiment.startExp());
+        System.out.println("Three out of three done");
     }
 
 }
