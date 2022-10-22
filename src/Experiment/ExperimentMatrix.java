@@ -60,10 +60,10 @@ public class ExperimentMatrix {
 
     public HashMap<String, Experiment> expMatrix(String variablePar1, String variablePar2) {
 
-        ArrayList<Double> parValues = new ArrayList<>(Arrays.asList(0.0, 0.005, 0.01, 0.02, 0.04, 0.08, 0.1, 0.2, 0.4, 0.6,
-                0.8, 1.0));
-        ArrayList<Double> parValues2 = new ArrayList<>(Arrays.asList(0.0, 0.005, 0.01, 0.02, 0.04, 0.08, 0.1, 0.2, 0.4, 0.6,
-                0.8, 1.0));
+        ArrayList<Double> parValues = new ArrayList<>(Arrays.asList(0.0, 0.01, 0.05, 0.1, 0.14, 0.17, 0.2, 0.3, 0.4,
+                0.75, 1.0, 1.5));
+        ArrayList<Double> parValues2 = new ArrayList<>(Arrays.asList(0.0, 0.01, 0.05, 0.1, 0.14, 0.17, 0.2, 0.3, 0.4,
+                0.75, 1.0, 1.5));
 
         HashMap<String, Experiment> expList = new HashMap<String, Experiment>();
 

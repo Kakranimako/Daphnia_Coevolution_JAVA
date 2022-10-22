@@ -26,7 +26,7 @@ public class MeanData {
 
     }
 
-    public MeanData(HashMap<Double, Double> meanVirulence, HashMap<Double, Double> meanResist, HashMap<Double, Double> meanAvgFitD, HashMap<Double,
+    public MeanData(HashMap<Double, Double> meanResist, HashMap<Double, Double> meanVirulence, HashMap<Double, Double> meanAvgFitD, HashMap<Double,
             Double> meanAvgFitS, HashMap<Double, Double> sem_Virulence, HashMap<Double, Double> sem_AvgFitD, HashMap<Double, Double> sem_AvgFitS,
                     HashMap<Double, Double> sem_Resist) {
         this.meanVirulence = meanVirulence;

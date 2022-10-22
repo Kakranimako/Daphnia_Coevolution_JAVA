@@ -14,24 +14,24 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int runs = 100;
-        double initGene1 = 0.0;
-        double initGene2 = 0.1;
-        double initVarGene1 = 0.1;
-        double initVarGene2 = 0.1;
-        double resistGene = 0.1;
+        int runs = 2;
+        double initGene1 = -2;
+        double initGene2 = 1;
+        double initVarGene1 = 0.5;
+        double initVarGene2 = 0.05;
+        double resistGene = 0.4;
         double resistVar = 0.1;
         double scarcity = 0.5;
-        double num_of_gens = 1000;
+        double num_of_gens = 106;
         double daphPopSize = 1000;
         double symbPopSize = 2000;
         double mut_chance = 0.01;
         double mutStepSize = 0.005;
-        double D_resistCoeff = 0.002;
-        double S_resistCoeff = 0.02;
-        double S_virCoeff = 0.02;
+        double D_resistCoeff = 0.25;
+        double S_resistCoeff = 0.25;
+        double S_virCoeff = 0.25;
         double D_reducedFit = 0;
-        double S_reducedFit = 0.3;
+        double S_reducedFit = 0.25;
         String variablePar1 = "scarcity";
         String variablePar2 = "D_resistCoeff";
         String mode = "static";

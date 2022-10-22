@@ -15,7 +15,7 @@ public class OrganismFactory {
         HashMap<String, Daphnia> org_pop = new HashMap<>();
         for (int i = 1; i <= size; i++) {
             String name = orgname + "_" + i;
-            double gene1 = new Random().nextGaussian()*resistGeneVar + resistGene;
+            double gene1 = Math.max(0, new Random().nextGaussian()*resistGeneVar + resistGene);
             double gene2 = 0.5;
             //new Random().nextGaussian(1, initVariance*0.1); //HARDCODE
             double fitness = 1;
@@ -71,7 +71,7 @@ public class OrganismFactory {
             String name = orgname + "_" + nameNum;
 
             Daphnia parent = Daphniapop.get(parentList.get(i));
-            double gene1 = new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"));
+            double gene1 = Math.max(0, new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize")));
             double gene2 = 0.5;
             //new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), 0.2*varis.get("mutStepSize")); //HARDCODE
             double fitness = 1;
