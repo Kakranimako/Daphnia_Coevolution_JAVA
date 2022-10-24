@@ -150,11 +150,13 @@ public class Simulation {
             daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
             symb.setFitness(1 + varis.get("S_virCoeff") * virDict.get(daph.getName()) * varis.get("S_resistCoeff")*(1 - daph.getGene1()));
 
-            if (daph.getFitness() < varis.get("D_reducedFit")) {
-                daph.setFitness(0);
+            if (daph.getFitness() < varis.get("thresholdFit")) {
+                daph.setFitness(0.01);
                 symb.setFitness(varis.get("S_reducedFit"));
+
             }
         }
+
 
         return allPops;
     }
@@ -175,10 +177,10 @@ public class Simulation {
         }
         virAvg = virAvg/virDict.size();
 
-        for (Symbiont symb: allPops.getSymbiontPop().values()) {
+        for (Symbiont symb: allPops.getGutSymbionts().values()) {
             avgFitS += symb.getFitness();
         }
-        avgFitS = avgFitS/allPops.getSymbiontPop().size();
+        avgFitS = avgFitS/allPops.getGutSymbionts().size();
 
 
         for (Daphnia daph: allPops.getDaphniaPop().values()) {
@@ -200,7 +202,7 @@ public class Simulation {
     
         ArrayList<String> colHeadersParams = new ArrayList<>();
         colHeadersParams.add("scarcity");
-        colHeadersParams.add("D_reducedFit");
+        colHeadersParams.add("thresholdFit");
         colHeadersParams.add("S_reducedFit");
         colHeadersParams.add("D_resistCoeff");
         colHeadersParams.add("S_resistCoeff");
@@ -242,12 +244,11 @@ public class Simulation {
     public HashMap<String, Daphnia> reprodDaph(Populations allPops, HashMap<String, Double> varis) {
 
         Parentpicker picksLists = new Parentpicker();
-        picksLists = makeCumulFitlist(allPops, "Daph", "none");
+
+        ArrayList<Daphnia> Dpop = new ArrayList<>(allPops.getDaphniaPop().values());
+        picksLists = makeCumulFitlistD(Dpop);
         picksLists = chooseParent(picksLists);
 
-
-
-        // don't forget white list probleem
 
         return new OrganismFactory().CreateNewIndvsDaphnia("Daphnia", allPops.getDaphniaPop(), varis, varis.get("daphPopSize"), picksLists.getParentList());
 
@@ -266,7 +267,7 @@ public class Simulation {
             stop = varis.get("daphPopSize");
         }
         Parentpicker picksList = new Parentpicker();
-        picksList  = makeCumulFitlist(allPops,"Symb", whichPop);
+        picksList  = makeCumulFitlistS(allPops, whichPop);
         picksList = chooseParent(picksList);
 
 
@@ -286,16 +287,37 @@ public class Simulation {
     //                                              SMALL FUNCTIONS                                                //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Parentpicker makeCumulFitlist(Populations allPops, String orgtype, String gut_or_env){
+    public Parentpicker makeCumulFitlistD(ArrayList<Daphnia> Dpop){
 
-        ArrayList<Organism> testpoplist = new ArrayList<>(allPops.getGutSymbionts().values());
+        double sumfit = 0;
+        ArrayList<Double> cumulFitList = new ArrayList<>();
 
-        if (orgtype.equals("Daph")) {
-            testpoplist = new ArrayList<>(allPops.getDaphniaPop().values());
-         }
+        ArrayList<String> parentCumulList = new ArrayList<>();
 
-        if (gut_or_env.equals("Env")) {
-            testpoplist = new ArrayList<>(allPops.getEnvSymbionts().values());
+        for(Daphnia org : Dpop) {
+            sumfit = sumfit + org.getFitness();
+            cumulFitList.add(sumfit);
+            parentCumulList.add(org.getName());
+        }
+
+
+        return new Parentpicker(cumulFitList, parentCumulList, new ArrayList<>());
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public Parentpicker makeCumulFitlistS(Populations allPops, String whichpop){
+
+        ArrayList<Symbiont> Spop;
+
+        if (whichpop == "Gut") {
+            ArrayList<Symbiont> mypop = new ArrayList<>(allPops.getGutSymbionts().values());
+            Spop = mypop;
+        }
+        else {
+            ArrayList<Symbiont> mypop2 = new ArrayList<>(allPops.getEnvSymbionts().values());
+
+            Spop = mypop2;
         }
 
         double sumfit = 0;
@@ -303,16 +325,16 @@ public class Simulation {
 
         ArrayList<String> parentCumulList = new ArrayList<>();
 
-        for(Organism org : testpoplist) {
-            sumfit = sumfit + 10*org.getFitness();
+        for(Symbiont org : Spop) {
+            sumfit = sumfit + 1000*org.getFitness();
             cumulFitList.add(sumfit);
             parentCumulList.add(org.getName());
         }
 
+
         return new Parentpicker(cumulFitList, parentCumulList, new ArrayList<>());
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     public Parentpicker chooseParent(Parentpicker picksList){
 
@@ -321,7 +343,9 @@ public class Simulation {
         ArrayList<Double> cList = new ArrayList<>();
         cList.addAll(picksList.getCumulFitList());
 
-        int sizelist = picksList.getCumulFitList().size();
+        int sizelist = cList.size();
+
+        Collections.sort(cList);
         double last_element = cList.get(sizelist-1);
 
 
@@ -556,9 +580,9 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data" + foldername);
+        File folder = new File("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data"+ foldername + "/" + filename+".csv");
+        FileWriter file = new FileWriter("C:/Users/nimak/Desktop/KULeuven/Honoursprogramme/Interdisciplinair onderzoek_Modelling/Experiment_Data/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
@@ -568,7 +592,7 @@ public class Simulation {
                 "varPar1" + "," + varPar1 + "," + varParvalue1+ ",," + "varPar2," + varPar2 + "," + varParvalue2 +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
                 "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
-                "D_reducedFit" + "," + varis.get("D_reducedFit") + ",," + "S_reducedFit" + "," + varis.get("S_reducedFit") +"\n"+
+                "thresholdFit" + "," + varis.get("thresholdFit") + ",," + "S_reducedFit" + "," + varis.get("S_reducedFit") +"\n"+
                 "mut_chance" + "," + varis.get("mut_chance") + "," + "," + "mutStepSize" + "," + varis.get("mutStepSize") + "\n\n");
 
         file.write("Generation" + "," + "scarcity" + ",resistGene,resG_SEM," + "virulence" + "," +"vir_SEM," + "avgFitD" + ",avgfitD_SEM,"

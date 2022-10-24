@@ -20,7 +20,7 @@ public class ExperimentMatrix {
     private double symbPopSize;
     private double mut_chance;
     private double mutStepSize;
-    private double reducedFitD;
+    private double thresholdFit;
     private double reducedFitS;
 
     private double resistCoeffD;
@@ -30,7 +30,7 @@ public class ExperimentMatrix {
 
     public ExperimentMatrix(int runs, double initGene1, double initVarGene1, double initGene2,
                             double initVarGene2, double resistGene, double resistVar, double scarcity, double num_of_gens,
-                            double daphPopSize, double symbPopSize, double mut_chance, double mutStepSize, double reducedFitD,
+                            double daphPopSize, double symbPopSize, double mut_chance, double mutStepSize, double thresholdFit,
                             double reducedFitS, double resistCoeffD, double resistCoeffS, double virCoeffS, String mode, long start) {
 
         this.runs = runs;
@@ -46,7 +46,7 @@ public class ExperimentMatrix {
         this.symbPopSize = symbPopSize;
         this.mut_chance = mut_chance;
         this.mutStepSize = mutStepSize;
-        this.reducedFitD = reducedFitD;
+        this.thresholdFit = thresholdFit;
         this.reducedFitS = reducedFitS;
         this.resistCoeffD = resistCoeffD;
         this.resistCoeffS = resistCoeffS;
@@ -60,10 +60,10 @@ public class ExperimentMatrix {
 
     public HashMap<String, Experiment> expMatrix(String variablePar1, String variablePar2) {
 
-        ArrayList<Double> parValues = new ArrayList<>(Arrays.asList(0.0, 0.01, 0.05, 0.1, 0.14, 0.17, 0.2, 0.3, 0.4,
-                0.75, 1.0, 1.5));
-        ArrayList<Double> parValues2 = new ArrayList<>(Arrays.asList(0.0, 0.01, 0.05, 0.1, 0.14, 0.17, 0.2, 0.3, 0.4,
-                0.75, 1.0, 1.5));
+        ArrayList<Double> parValues = new ArrayList<>(Arrays.asList(0.0, 0.1, 0.2, 0.3, 0.4,
+                0.5, 0.6, 0.7, 0.8, 0.9, 1.0));
+        ArrayList<Double> parValues2 = new ArrayList<>(Arrays.asList(0.0, 0.1, 0.2, 0.3, 0.4,
+                0.5, 0.6, 0.7, 0.8, 0.9, 1.0));
 
         HashMap<String, Experiment> expList = new HashMap<String, Experiment>();
 
@@ -76,7 +76,7 @@ public class ExperimentMatrix {
                 Experiment exp1 = new Experiment(mode + "_" + variablePar1 + "_" + variablePar2,
                         mode + "_" + variablePar1 + "_" + (int) num1  + "_" + variablePar2 + "_" + (int) num2,
                         runs, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, initGene1,
-                        initVarGene1, initGene2, initVarGene2, resistGene, resistVar, resistCoeffD, resistCoeffS, virCoeffS, reducedFitD, reducedFitS,
+                        initVarGene1, initGene2, initVarGene2, resistGene, resistVar, resistCoeffD, resistCoeffS, virCoeffS, thresholdFit, reducedFitS,
                         variablePar1, parValues.get(i), variablePar2, parValues2.get(j),
                         mode, ModeArgs.getModeArgs(0.0, 0.2, 1.0, 5.0, 0.0, 0.4, 1.0));
 

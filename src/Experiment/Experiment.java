@@ -41,7 +41,7 @@ public class Experiment {
     public Experiment (String foldername, String expName, int runs, double scarcity, double num_of_gens, double daphPopSize,
                        double symbPopSize, double mut_chance, double mutStepSize, double initGene1, double initVar1,
                        double initGene2, double initVar2, double resistGene, double resistVar, double D_resistCoeff,
-                       double S_resistCoeff, double S_virCoeff, double D_reducedFit, double S_reducedFit, String variablePar1, double varParValue1,
+                       double S_resistCoeff, double S_virCoeff, double thresholdFit, double S_reducedFit, String variablePar1, double varParValue1,
                        String variablePar2, double varParValue2, String mode, HashMap<String, Double> modeArgs) {
 
         Variables dummyVars = new Variables( new HashMap<>());
@@ -55,7 +55,7 @@ public class Experiment {
         dummyVars.getVarDict().put("mutStepSize", mutStepSize);
         dummyVars.getVarDict().put("D_resistCoeff", D_resistCoeff);
         dummyVars.getVarDict().put("S_resistCoeff", S_resistCoeff);
-        dummyVars.getVarDict().put("D_reducedFit", D_reducedFit);
+        dummyVars.getVarDict().put("thresholdFit", thresholdFit);
         dummyVars.getVarDict().put("S_reducedFit", S_reducedFit);
         dummyVars.getVarDict().put("initGene1", initGene1);
         dummyVars.getVarDict().put("initGene2", initGene2);
@@ -82,7 +82,7 @@ public class Experiment {
         HashMap<Double, ArrayList<Double>> fitD_List = new HashMap<>();
         HashMap<Double, ArrayList<Double>> mutation_chance = new HashMap<>();
         HashMap<Double, ArrayList<Double>> mutStepSizeList = new HashMap<>();
-        HashMap<Double, ArrayList<Double>> D_reducedFitList = new HashMap<>();
+        HashMap<Double, ArrayList<Double>> thresholdFitList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> S_reducedFitList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> D_resistCoeffList = new HashMap<>();
         HashMap<Double, ArrayList<Double>> S_resistCoeffList = new HashMap<>();
@@ -98,7 +98,7 @@ public class Experiment {
         bigData.getColumns().put("avgFitD", fitD_List);
         bigData.getColumns().put("mut_chance", mutation_chance);
         bigData.getColumns().put("mutStepSize", mutStepSizeList);
-        bigData.getColumns().put("D_reducedFit", D_reducedFitList);
+        bigData.getColumns().put("thresholdFit", thresholdFitList);
         bigData.getColumns().put("S_reducedFit", S_reducedFitList);
         bigData.getColumns().put("D_resistCoeff", D_resistCoeffList);
         bigData.getColumns().put("scarcity", scarcityList);
