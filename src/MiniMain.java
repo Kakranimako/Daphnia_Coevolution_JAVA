@@ -18,23 +18,23 @@ public class MiniMain {
     public void miniMainLaunch () throws IOException {
 
 
-        int runs = 2;
-        double initGene1 = -2;
-        double initGene2 = 1;
+        int runs = 100;
+        double initGene1 = 0.5;
+        double initGene2 = -1;
         double initVarGene1 = 0.5;
         double initVarGene2 = 0.05;
         double resistGene = 0.5;
-        double resistVar = 0.1;
+        double resistVar = 0.2;
         double scarcity = 0.5;
-        double num_of_gens = 200;
-        double daphPopSize = 100;
-        double symbPopSize = 200;
+        double num_of_gens = 1000;
+        double daphPopSize = 1000;
+        double symbPopSize = 2000;
         double mut_chance = 0.01;
         double mutStepSize = 0.005;
-        double D_resistCoeff = 0.5;
-        double S_resistCoeff = 0.5;
-        double S_virCoeff = 0.6;
-        double thresholdFit = 0.6;
+        double D_resistCoeff = 0.3;
+        double S_resistCoeff = 0.4;
+        double S_virCoeff = 0.5;
+        double thresholdFit = 0.375;
         double S_reducedFit = 0.25;
         String mode = "static";
         long start = System.currentTimeMillis();
