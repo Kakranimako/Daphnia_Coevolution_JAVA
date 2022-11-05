@@ -60,7 +60,7 @@ public class Simulation {
                variables.put(variablePar, varList.get((int) genNum));
            }
 
-           // allPops = interaction(allPops, variables);
+           allPops = interaction(allPops, variables);
 
             if (datapoints.contains(genNum)) {
                 bigdata = dataCollected(allPops, bigdata, variables, genNum);
@@ -94,22 +94,22 @@ public class Simulation {
         allPops.setDaphniaPop(daphniaPop);
 
 
-        ArrayList<Symbiont> symbiontlist = new ArrayList<>(allPops.getSymbiontPop().values());
-        Collections.shuffle(symbiontlist);
+        //ArrayList<Symbiont> symbiontlist = new ArrayList<>(allPops.getSymbiontPop().values());
+        //Collections.shuffle(symbiontlist);
 
-        for (Daphnia daphnia : allPops.getDaphniaPop().values()) {
-            int symbInd = new Random().nextInt(allPops.getDaphniaPop().size());
-            Symbiont symbiont = symbiontlist.get(symbInd);
-            daphnia.setpartner(symbiont.getName());
-            symbiont.setpartner(daphnia.getName());
-            allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
-            symbiontlist.remove(symbInd);
-        }
+        //for (Daphnia daphnia : allPops.getDaphniaPop().values()) {
+           // int symbInd = new Random().nextInt(allPops.getDaphniaPop().size());
+          //  Symbiont symbiont = symbiontlist.get(symbInd);
+          //  daphnia.setpartner(symbiont.getName());
+          //  symbiont.setpartner(daphnia.getName());
+          //  allPops.getGutSymbionts().put(symbiont.getName(), symbiont);
+          //  symbiontlist.remove(symbInd);
+       // }
 
 
-        for (Symbiont symbiont: symbiontlist) {
-            allPops.getEnvSymbionts().put(symbiont.getName(), symbiont);
-        }
+        //for (Symbiont symbiont: symbiontlist) {
+        //    allPops.getEnvSymbionts().put(symbiont.getName(), symbiont);
+        //}
         return allPops;
     }
 
@@ -119,20 +119,20 @@ public class Simulation {
         HashMap<String, Daphnia> Dpop = reprodDaph(allPops, varis);
         allPops.setDaphniaPop(Dpop);
 
-        HashMap<String, Symbiont> Gpop = reprodSymb(allPops, varis, "Gut");
+        HashMap<String, Symbiont> Gpop = reprodSymb(allPops, varis);
         allPops.setGutSymbionts(Gpop);
 
 
 
-        HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
-        allPops.setEnvSymbionts(Epop);
+        //HashMap<String, Symbiont> Epop = reprodSymb(allPops, varis, "Env");
+        //allPops.setEnvSymbionts(Epop);
 
 
 
-        HashSet<String> whitelist = createWhitelist(allPops.getDaphniaPop());
-        Coupled resultsCoupling = createCoupling(allPops.getDaphniaPop(),allPops.getGutSymbionts(),whitelist);
+        //HashSet<String> whitelist = createWhitelist(allPops.getDaphniaPop());
+        //Coupled resultsCoupling = createCoupling(allPops.getDaphniaPop(),allPops.getGutSymbionts(),whitelist);
 
-        allPops = assignNonCoupled(resultsCoupling, allPops);
+        //allPops = assignNonCoupled(resultsCoupling, allPops);
 
         return allPops;
 
@@ -141,20 +141,21 @@ public class Simulation {
 
     public Populations interaction(Populations allPops, HashMap<String, Double> varis) {
 
-        HashMap<String, Double> virDict = cr_virDict(allPops, varis.get("scarcity"));
-
+        //HashMap<String, Double> virDict = cr_virDict(allPops, varis.get("scarcity"));
+        ArrayList<Symbiont> symblist = new ArrayList<>(allPops.getSymbiontPop().values());
         for (Daphnia daph : allPops.getDaphniaPop().values()) {
 
-            Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
+            Symbiont symb = symblist.get(new Random().nextInt(symblist.size()));
 
-            daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
-            symb.setFitness(1 + varis.get("S_virCoeff") * virDict.get(daph.getName()) + varis.get("S_resistCoeff")*(1 - daph.getGene1()));
+            daph.setFitness(1 - calcVir(symb, varis) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
+            symb.setFitness(1 + varis.get("S_virCoeff")*calcVir(symb, varis) + varis.get("S_resistCoeff")*(1 - daph.getGene1()));
 
             if (daph.getFitness() < varis.get("thresholdFit")) {
-                daph.setFitness(0.01);
+                daph.setFitness(0.001);
                 symb.setFitness(varis.get("S_reducedFit"));
-
             }
+
+            symblist.remove(symb);
         }
 
 
@@ -252,28 +253,27 @@ public class Simulation {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public HashMap<String, Symbiont> reprodSymb(Populations allPops, HashMap<String, Double> varis, String whichPop){
+    public HashMap<String, Symbiont> reprodSymb(Populations allPops, HashMap<String, Double> varis){
 
-        HashMap<String, Symbiont> symbPop = allPops.getEnvSymbionts();
-        double start = varis.get("daphPopSize") + 1;
+        HashMap<String, Symbiont> symbPop = allPops.getSymbiontPop();
+        double start = 1;
         double stop = varis.get("symbPopSize");
 
-        if (whichPop.equals("Gut")) {
-            symbPop = allPops.getGutSymbionts();
-            start = 1;
-            stop = varis.get("daphPopSize");
-        }
+        //if (whichPop.equals("Gut")) {
+            //symbPop = allPops.getGutSymbionts();
+            //start = 1;
+            //stop = varis.get("daphPopSize");
+        //}
         Parentpicker picksList = new Parentpicker();
-        picksList  = makeCumulFitlistS(allPops, whichPop);
+        picksList  = makeCumulFitlistS(allPops);
         picksList = chooseParent(picksList);
 
 
 
-        HashSet<String> parentSet = new HashSet<>(picksList.getParentList());
+        //HashSet<String> parentSet = new HashSet<>(picksList.getParentList());
 
 
         symbPop = new OrganismFactory().CreateNewIndvsSymbiont("Symbiont", symbPop, varis, start, stop, picksList.getParentList());
-
 
 
         return symbPop;
@@ -303,19 +303,19 @@ public class Simulation {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public Parentpicker makeCumulFitlistS(Populations allPops, String whichpop){
+    public Parentpicker makeCumulFitlistS(Populations allPops){
 
-        ArrayList<Symbiont> Spop;
+        ArrayList<Symbiont> Spop =  new ArrayList<>(allPops.getSymbiontPop().values());
 
-        if (whichpop == "Gut") {
-            ArrayList<Symbiont> mypop = new ArrayList<>(allPops.getGutSymbionts().values());
-            Spop = mypop;
-        }
-        else {
-            ArrayList<Symbiont> mypop2 = new ArrayList<>(allPops.getEnvSymbionts().values());
+        //if (whichpop == "Gut") {
+           // ArrayList<Symbiont> mypop = new ArrayList<>(allPops.getGutSymbionts().values());
+          //  Spop = mypop;
+        //}
+        //else {
+            //ArrayList<Symbiont> mypop2 = new ArrayList<>(allPops.getEnvSymbionts().values());
 
-            Spop = mypop2;
-        }
+            //Spop = mypop2;
+        //}
 
         double sumfit = 0;
         ArrayList<Double> cumulFitList = new ArrayList<>();
@@ -572,15 +572,15 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Double calcVir(Symbiont symb, HashMap<String, Double> varis) {
 
-        return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
+        return 1 / (1 + Math.exp(-symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        foldername = "control";
-        File folder = new File("D:/desktopp/Daphnia_EXPS/" + foldername);
+        foldername = "HT_" + foldername;
+        File folder = new File("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("D:/desktopp/Daphnia_EXPS/"+ foldername + "/control" + filename+".csv");
+        FileWriter file = new FileWriter("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +

@@ -18,7 +18,7 @@ public class MiniMain {
     public void miniMainLaunch () throws IOException {
 
 
-        int runs = 100;
+        int runs = 2;
         double initGene1 = 0.5;
         double initGene2 = -1;
         double initVarGene1 = 0.5;
@@ -26,7 +26,7 @@ public class MiniMain {
         double resistGene = 0.5;
         double resistVar = 0.2;
         double scarcity = 0.5;
-        double num_of_gens = 1000;
+        double num_of_gens = 107;
         double daphPopSize = 1000;
         double symbPopSize = 2000;
         double mut_chance = 0.01;
