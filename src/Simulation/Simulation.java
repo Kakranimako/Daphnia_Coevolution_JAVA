@@ -34,7 +34,7 @@ public class Simulation {
         ArrayList<Double> varList = new ArrayList<>();
 
         if (mode.equals("sinus")) {
-             varList = sinusfunc(variables, variables.get(variablePar), modeArgs.get("horizonShift"), modeArgs.get("period"));
+             varList = sinusfunc(variables, variables.get(variablePar), modeArgs.get("horizonShift"), modeArgs.get("period"), modeArgs.get("vertShift"));
         }
         else if (mode.equals("linear")) {
             varList = linear(variables, modeArgs.get("slope"), modeArgs.get("vertShift"));
@@ -60,13 +60,13 @@ public class Simulation {
                variables.put(variablePar, varList.get((int) genNum));
            }
 
-           // allPops = interaction(allPops, variables);
+           allPops = interaction(allPops, variables);
 
-            if (datapoints.contains(genNum)) {
+           if (datapoints.contains(genNum)) {
                 bigdata = dataCollected(allPops, bigdata, variables, genNum);
-            }
+           }
 
-            allPops = reprod(allPops, variables);
+           allPops = reprod(allPops, variables);
 
 
 
@@ -148,10 +148,10 @@ public class Simulation {
             Symbiont symb = allPops.getGutSymbionts().get(daph.getpartner());
 
             daph.setFitness(1 - virDict.get(daph.getName()) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
-            symb.setFitness(1 + varis.get("S_virCoeff") * virDict.get(daph.getName()) + varis.get("S_resistCoeff")*(1 - daph.getGene1()));
+            symb.setFitness(Math.max(0.001, 1 + varis.get("S_virCoeff") * virDict.get(daph.getName()) + varis.get("S_resistCoeff")*(1 - daph.getGene1())));
 
             if (daph.getFitness() < varis.get("thresholdFit")) {
-                daph.setFitness(0.01);
+                daph.setFitness(0.001);
                 symb.setFitness(varis.get("S_reducedFit"));
 
             }
@@ -577,17 +577,18 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        foldername = "control";
-        File folder = new File("D:/desktopp/Daphnia_EXPS/" + foldername);
+        foldername = "VT_" + foldername;
+
+        File folder = new File("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("D:/desktopp/Daphnia_EXPS/"+ foldername + "/control" + filename+".csv");
+        FileWriter file = new FileWriter("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
                 "InitGene1" + "," + varis.get("initGene1") + ",," + "InitGene2" + "," + varis.get("initGene2") + ",," +
                 "Init_G1_StD" + "," + varis.get("initVar1")+ ",," + "Init_G2_StD" + "," + varis.get("initVar2")+ "\n" +
                 "ResistGene," + varis.get("resistGene") + ",,resistVar," + varis.get("resistVar") + ",,generations" + "," + varis.get("num_of_gens") + "," + "," + "mode" + "," + mode + ",," +
-                "varPar1" + "," + varPar1 + "," + varParvalue1+ ",," + "varPar2," + varPar2 + "," + varParvalue2 +"\n" +
+                "varPar1" + "," + varPar1 + "," + varParvalue1+ ",," + "varPar2," + varPar2 + ",NA,"  +"\n" +
                 "daphPopsize" + "," + varis.get("daphPopSize") + "\n" +
                 "symbPopsize" + "," + varis.get("symbPopSize") + "\n" +
                 "thresholdFit" + "," + varis.get("thresholdFit") + ",," + "S_reducedFit" + "," + varis.get("S_reducedFit") +"\n"+
@@ -635,15 +636,14 @@ public class Simulation {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public ArrayList<Double> sinusfunc (HashMap<String, Double> varis, double specificParam, double horizonShift, double period) {
+    public ArrayList<Double> sinusfunc (HashMap<String, Double> varis, double specificParam, double horizonShift, double period, double vertShift) {
 
         ArrayList<Double> sinusList = new ArrayList<>();
-        double a = specificParam/2;
-        double c = specificParam/2;
+
 
         for (int i = 0; i < varis.get("num_of_gens")+1; i++) {
 
-            sinusList.add(a * Math.sin((2*Math.PI*i)/(period*varis.get("num_of_gens")) - horizonShift) +c);
+            sinusList.add(specificParam * Math.sin((2*Math.PI*i)/(period*varis.get("num_of_gens")) - horizonShift) +vertShift);
 
         }
 

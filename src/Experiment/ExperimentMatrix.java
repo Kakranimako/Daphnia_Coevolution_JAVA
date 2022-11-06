@@ -73,8 +73,15 @@ public class ExperimentMatrix {
                 double num1 = parValues.get(i) *1000;
                 double num2 = parValues2.get(j) *1000;
 
-                Experiment exp1 = new Experiment(mode + "_" + variablePar1 + "_" + variablePar2,
-                        mode + "_" + variablePar1 + "_" + (int) num1  + "_" + variablePar2 + "_" + (int) num2,
+                String foldername = mode + "_" + variablePar1 + "_" + variablePar2;
+                expName = mode + "_" + variablePar1 + "_" + (int) num1  + "_" + variablePar2 + "_" + (int) num2;
+
+                if (mode != "static") {
+                    expName = mode + "_" + variablePar1 + "_" + (int) num1;
+                    foldername = mode + "_" + variablePar1;
+                }
+
+                Experiment exp1 = new Experiment(foldername, expName,
                         runs, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, initGene1,
                         initVarGene1, initGene2, initVarGene2, resistGene, resistVar, resistCoeffD, resistCoeffS, virCoeffS, thresholdFit, reducedFitS,
                         variablePar1, parValues.get(i), variablePar2, parValues2.get(j),

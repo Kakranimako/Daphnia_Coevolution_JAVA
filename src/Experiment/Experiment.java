@@ -67,7 +67,7 @@ public class Experiment {
 
 
         dummyVars.getVarDict().put(variablePar1, varParValue1);
-        dummyVars.getVarDict().put(variablePar2, varParValue2);
+        //dummyVars.getVarDict().put(variablePar2, varParValue2);
 
 
 

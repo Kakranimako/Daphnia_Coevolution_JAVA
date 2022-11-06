@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="altversion in java:experiment class created. resistance gene incorporated, almost complete, everything ready for long tests">
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="HT_resistance done">
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Experiment/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Experiment/ExperimentMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Experiment/ExperimentMatrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MiniMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MiniMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Organism/OrganismFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +28,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master2" />
+        <entry key="$PROJECT_DIR$" value="Resistance_concept" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -118,10 +120,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.SimulationTest.test" />
         <item itemvalue="JUnit.SimulationTest.makeCumulFitList" />
         <item itemvalue="JUnit.SimulationTest" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>

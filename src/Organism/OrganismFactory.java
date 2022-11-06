@@ -71,7 +71,7 @@ public class OrganismFactory {
             String name = orgname + "_" + nameNum;
 
             Daphnia parent = Daphniapop.get(parentList.get(i));
-            double gene1 = Math.max(0, new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize")));
+            double gene1 = Math.max(0, Math.min(1, new Simulation().newGene(parent.getGene1(), varis.get("mut_chance"), varis.get("mutStepSize"))));
             double gene2 = 0.5;
             //new Simulation().newGene(parent.getGene2(), varis.get("mut_chance"), 0.2*varis.get("mutStepSize")); //HARDCODE
             double fitness = 1;
