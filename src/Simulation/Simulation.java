@@ -147,8 +147,8 @@ public class Simulation {
 
             Symbiont symb = symblist.get(new Random().nextInt(symblist.size()));
 
-            daph.setFitness(1 - calcVir(symb, varis) * (1 - daph.getGene1()) - varis.get("D_resistCoeff")* daph.getGene1());
-            symb.setFitness(1 + varis.get("S_virCoeff")*calcVir(symb, varis) + varis.get("S_resistCoeff")*(1 - daph.getGene1()));
+            daph.setFitness(1 - calcVir(symb, varis) * (1 - Math.min(1,daph.getGene1())) - varis.get("D_resistCoeff")* daph.getGene1());
+            symb.setFitness(1 + varis.get("S_virCoeff")*calcVir(symb, varis) * varis.get("S_resistCoeff")*(1 - Math.min(1, daph.getGene1())));
 
             if (daph.getFitness() < varis.get("thresholdFit")) {
                 daph.setFitness(0.001);
@@ -578,9 +578,9 @@ public class Simulation {
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
         foldername = "HT_" + foldername;
-        File folder = new File("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\" + foldername);
+        File folder = new File("D:\\desktopp\\Daphnia_EXPS/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\"+ foldername + "/" + filename+".csv");
+        FileWriter file = new FileWriter("D:\\desktopp\\Daphnia_EXPS/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +

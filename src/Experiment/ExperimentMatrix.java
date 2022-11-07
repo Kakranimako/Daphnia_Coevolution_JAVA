@@ -61,7 +61,7 @@ public class ExperimentMatrix {
     public HashMap<String, Experiment> expMatrix(String variablePar1, String variablePar2) {
 
         ArrayList<Double> parValues = new ArrayList<>(Arrays.asList(0.0, 0.1, 0.2, 0.3, 0.4,
-                0.5));
+                0.5, 0.6, 0.7, 0.8, 0.9, 1.0));
         ArrayList<Double> parValues2 = new ArrayList<>(Arrays.asList(0.0, 0.1, 0.2, 0.3, 0.4,
                 0.5));
 
