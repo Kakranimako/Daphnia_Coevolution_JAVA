@@ -18,7 +18,7 @@ public class MiniMain {
     public void miniMainLaunch () throws IOException {
 
 
-        int runs = 100;
+        int runs = 10;
         double initGene1 = -2;
         double initGene2 = 1;
         double initVarGene1 = 0.5;
@@ -26,9 +26,9 @@ public class MiniMain {
         double resistGene = 0.5;
         double resistVar = 0.1;
         double scarcity = 0.5;
-        double num_of_gens = 1000;
-        double daphPopSize = 1000;
-        double symbPopSize = 2000;
+        double num_of_gens = 500;
+        double daphPopSize = 100;
+        double symbPopSize = 200;
         double mut_chance = 0.01;
         double mutStepSize = 0.005;
         double D_resistCoeff = 0.3;
@@ -51,7 +51,9 @@ public class MiniMain {
         HashMap<String, Experiment> expList = expMatrixSetup.expMatrix(variablePar1, variablePar2);
 
         expList.values().parallelStream().forEach(experiment -> experiment.startExp());
-
+        //for (Experiment exp: expList.values()) {
+            //exp.startExp();
+        //}
         System.out.println("This set matrix experiments done");
 
     }

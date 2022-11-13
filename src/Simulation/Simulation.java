@@ -119,8 +119,8 @@ public class Simulation {
         HashMap<String, Daphnia> Dpop = reprodDaph(allPops, varis);
         allPops.setDaphniaPop(Dpop);
 
-        HashMap<String, Symbiont> Gpop = reprodSymb(allPops, varis);
-        allPops.setGutSymbionts(Gpop);
+        HashMap<String, Symbiont> Spop = reprodSymb(allPops, varis);
+        allPops.setSymbiontPop(Spop);
 
 
 
@@ -145,17 +145,19 @@ public class Simulation {
         ArrayList<Symbiont> symblist = new ArrayList<>(allPops.getSymbiontPop().values());
         for (Daphnia daph : allPops.getDaphniaPop().values()) {
 
-            Symbiont symb = symblist.get(new Random().nextInt(symblist.size()));
+            if (new Random().nextDouble() < 0.5) {
+                Symbiont symb = symblist.get(new Random().nextInt(symblist.size()));
 
-            daph.setFitness(1 - calcVir(symb, varis) * (1 - Math.min(1,daph.getGene1())) - varis.get("D_resistCoeff")* daph.getGene1());
-            symb.setFitness(1 + varis.get("S_virCoeff")*calcVir(symb, varis) * varis.get("S_resistCoeff")*(1 - Math.min(1, daph.getGene1())));
+                daph.setFitness(1 - calcVir(symb, varis) * (1 - Math.min(1, daph.getGene1())) - varis.get("D_resistCoeff") * daph.getGene1());
+                symb.setFitness(1 + varis.get("S_virCoeff") * calcVir(symb, varis) * varis.get("S_resistCoeff") * (1 - Math.min(1, daph.getGene1())));
 
-            if (daph.getFitness() < varis.get("thresholdFit")) {
-                daph.setFitness(0.001);
-                symb.setFitness(varis.get("S_reducedFit"));
+                if (daph.getFitness() < varis.get("thresholdFit")) {
+                    daph.setFitness(0.001);
+                    symb.setFitness(varis.get("S_reducedFit"));
+                }
+
+                symblist.remove(symb);
             }
-
-            symblist.remove(symb);
         }
 
 
@@ -171,9 +173,11 @@ public class Simulation {
 
 
         for (Symbiont symby: allPops.getSymbiontPop().values()){
-            virAvg += 1 / (1 + Math.exp(-symby.getGene1() * (varis.get("scarcity") - symby.getGene2())));
+            virAvg += (1 / (1 + Math.exp(symby.getGene1() * (varis.get("scarcity") - symby.getGene2()))));
         }
         virAvg = virAvg/allPops.getSymbiontPop().size();
+
+
 
         for (Symbiont symb: allPops.getSymbiontPop().values()) {
             avgFitS += symb.getFitness();
@@ -572,15 +576,15 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Double calcVir(Symbiont symb, HashMap<String, Double> varis) {
 
-        return 1 / (1 + Math.exp(-symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
+        return 1 / (1 + Math.exp(symb.getGene1() * (varis.get("scarcity") - symb.getGene2())));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        foldername = "HT_" + foldername;
-        File folder = new File("D:\\desktopp\\Daphnia_EXPS/" + foldername);
+        foldername = "Test_HT_" + foldername;
+        File folder = new File("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\Experiment_Data_27_10_22/" + foldername);
         folder.mkdir();
-        FileWriter file = new FileWriter("D:\\desktopp\\Daphnia_EXPS/"+ foldername + "/" + filename+".csv");
+        FileWriter file = new FileWriter("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\Experiment_Data_27_10_22/"+ foldername + "/" + filename+".csv");
 
         file.write(filename + "," + "\n"+
                 "Runs" + "," + bigdata.getColumns().get("generations").get(0.0).size() + ",," +
