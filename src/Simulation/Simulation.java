@@ -581,7 +581,7 @@ public class Simulation {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
-        foldername = "Test_HT_" + foldername;
+        foldername = "13_11_HT_" + foldername;
         File folder = new File("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\Experiment_Data_27_10_22/" + foldername);
         folder.mkdir();
         FileWriter file = new FileWriter("C:\\Users\\nimak\\Desktop\\KULeuven\\Honoursprogramme\\Interdisciplinair onderzoek_Modelling\\Experiment_Data\\Experiment_Data_27_10_22/"+ foldername + "/" + filename+".csv");
