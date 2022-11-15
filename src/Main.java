@@ -10,7 +10,7 @@ public class Main {
         MiniMain exp1 = new MiniMain("scarcity", "D_resistCoeff");
         exp1.miniMainLaunch();
 
-        MiniMain exp2 = new MiniMain("scarcity", "S_resistCoeff");
+       /* MiniMain exp2 = new MiniMain("scarcity", "S_resistCoeff");
         exp2.miniMainLaunch();
 
         MiniMain exp3 = new MiniMain("scarcity", "S_virCoeff");
@@ -23,7 +23,7 @@ public class Main {
         exp5.miniMainLaunch();
 
         MiniMain exp6 = new MiniMain("S_resistCoeff", "S_virCoeff");
-        exp6.miniMainLaunch();
+        exp6.miniMainLaunch();*/
 
     }
 
