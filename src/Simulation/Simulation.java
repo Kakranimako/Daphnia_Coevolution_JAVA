@@ -170,7 +170,7 @@ public class Simulation {
 
 
         for (Symbiont symby: allPops.getSymbiontPop().values()){
-            virAvg += 1 / (1 + Math.exp(-symby.getGene1() * (varis.get("scarcity") - symby.getGene2())));
+            virAvg += 1 / (1 + Math.exp(symby.getGene1() * (varis.get("scarcity") - symby.getGene2())));
         }
         virAvg = virAvg/allPops.getSymbiontPop().size();
 
@@ -578,7 +578,7 @@ public class Simulation {
     public void toTXT (Collected_data bigdata, MeanData meanie, HashMap<String, Double> varis, String mode, String varPar1, Double varParvalue1, String varPar2, Double varParvalue2, String foldername, String filename) throws IOException {
 
         foldername = "VT_" + foldername;
-        filename = "OSC" +filename;
+        filename = "high_low_high_" +filename;
         File folder = new File("D:\\desktopp\\Daphnia_EXPS/" + foldername);
         folder.mkdir();
         FileWriter file = new FileWriter("D:\\desktopp\\Daphnia_EXPS/"+ foldername + "/" + filename+".csv");
@@ -604,7 +604,7 @@ public class Simulation {
                     String.valueOf(meanie.getMeanResist().get(datapoint)) + "," +
                     String.valueOf(meanie.getSem_Resist().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanVirulence().get(datapoint)) + "," +
-                    String.valueOf(meanie.getSem_AvgFitD().get(datapoint)) + "," +
+                    String.valueOf(meanie.getSem_Virulence().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanAvgFitD().get(datapoint)) + "," +
                     String.valueOf(meanie.getSem_AvgFitD().get(datapoint)) + "," +
                     String.valueOf(meanie.getMeanAvgFitS().get(datapoint)) + "," +

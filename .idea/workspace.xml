@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="VT_sinus_resistance done">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43__Changes_.xml" afterDir="false" />
+    <list default="true" id="ac94fffa-562f-4f47-bf17-0ef284769e99" name="Changes" comment="Sinus VT resistance, lots of oscillations">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_10_2022_10_43__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MiniMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MiniMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Simulation/Simulation.java" afterDir="false" />
     </list>
@@ -118,10 +118,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.SimulationTest.test" />
         <item itemvalue="JUnit.SimulationTest.makeCumulFitList" />
         <item itemvalue="JUnit.SimulationTest" />
-        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -303,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666477470442</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Sinus VT resistance, lots of oscillations">
+      <created>1668514223506</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1668514223506</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -347,7 +354,8 @@
     <MESSAGE value="altversion in java: switch to horizontal transfer of symbionts_2" />
     <MESSAGE value="fixed numbering issue for RStudio? corrected mean switch resist gene and virulence" />
     <MESSAGE value="fixed numbering issue for RStudio? corrected mean switch resist gene and virulence, finalised parameters" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed numbering issue for RStudio? corrected mean switch resist gene and virulence, finalised parameters" />
+    <MESSAGE value="Sinus VT resistance, lots of oscillations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sinus VT resistance, lots of oscillations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

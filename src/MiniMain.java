@@ -18,7 +18,7 @@ public class MiniMain {
     public void miniMainLaunch () throws IOException {
 
 
-        int runs = 100;
+        int runs = 2;
         double initGene1 = -2;
         double initGene2 = 1;
         double initVarGene1 = 0.5;
@@ -26,7 +26,7 @@ public class MiniMain {
         double resistGene = 0.5;
         double resistVar = 0.1;
         double scarcity = 0.5;
-        double num_of_gens = 20000;
+        double num_of_gens = 1000;
         double daphPopSize = 1000;
         double symbPopSize = 2000;
         double mut_chance = 0.01;
@@ -49,7 +49,7 @@ public class MiniMain {
                 runs, scarcity, num_of_gens, daphPopSize, symbPopSize, mut_chance, mutStepSize, initGene1,
                 initVarGene1, initGene2, initVarGene2, resistGene, resistVar, D_resistCoeff, S_resistCoeff, S_virCoeff, thresholdFit, S_reducedFit,
                 variablePar1, 0.5, variablePar2, 0.5,
-                mode, ModeArgs.getModeArgs(0.0, -1.2, 0.1, 5.0, 0.5, 0.4, 1.0));
+                mode, ModeArgs.getModeArgs(0.0, -1.4, 1.0, 5.0, 0.5, 0.4, 1.0));
 
         exp1.startExp();
         //"different modes are: linear, static, sinus, step, random"
